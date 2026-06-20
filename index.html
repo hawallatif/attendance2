@@ -588,15 +588,18 @@ function setDate(m){
 function inRange(ts){
   if(dateMode==='all') return true;
   if(!ts) return false;
-  let d=new Date(ts);
-  if(isNaN(d)){ const p=String(ts).split(/[\/\-\.T ]/); if(p.length>=3) d=new Date(`${p[2]}-${p[1].padStart(2,'0')}-${p[0].padStart(2,'0')}`); }
+  const d = new Date(ts);
   if(isNaN(d)) return true;
-  const now=new Date(), tod=new Date(now.getFullYear(),now.getMonth(),now.getDate());
-  const dd=new Date(d.getFullYear(),d.getMonth(),d.getDate());
-  if(dateMode==='today') return dd.getTime()===tod.getTime();
-  if(dateMode==='week'){ const ws=new Date(tod); ws.setDate(tod.getDate()-tod.getDay()); return d>=ws; }
-  if(dateMode==='month') return d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth();
-  if(dateMode==='custom'&&customDate){ const cd=new Date(customDate); return dd.getTime()===new Date(cd.getFullYear(),cd.getMonth(),cd.getDate()).getTime(); }
+  const now = new Date();
+  const tod = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const dd  = new Date(d.getFullYear(),  d.getMonth(),   d.getDate());
+  if(dateMode==='today')  return dd.getTime() === tod.getTime();
+  if(dateMode==='week'){  const ws=new Date(tod); ws.setDate(tod.getDate()-tod.getDay()); return d >= ws; }
+  if(dateMode==='month')  return d.getFullYear()===now.getFullYear() && d.getMonth()===now.getMonth();
+  if(dateMode==='custom' && customDate){
+    const cd = new Date(customDate);
+    return dd.getTime() === new Date(cd.getFullYear(),cd.getMonth(),cd.getDate()).getTime();
+  }
   return true;
 }
 
@@ -606,10 +609,10 @@ function applyF(){
   const fc=document.getElementById('f-course').value;
   const fn=document.getElementById('f-name').value.toLowerCase();
   filtered=allRows.filter(r=>{
-    const rn=(r.name||r[0]||'').toLowerCase();
-    const rc=(r.course||r[1]||'');
-    const rst=(r.stage||r[2]||'');
-    const rts=(r.timestamp||r.time||r[3]||r[2]||'');
+    const rn=(r.name||'').toLowerCase();
+    const rc=(r.course||'');
+    const rst=(r.stage||'');
+    const rts=(r.timestamp||'');
     if(fs&&rst!==fs) return false;
     if(fc&&rc!==fc) return false;
     if(fn&&!rn.includes(fn)) return false;
@@ -655,11 +658,21 @@ function populateCourseFilter(){
   document.getElementById('f-course').innerHTML='<option value="">— هەموو دەرسەکان —</option>'+seen.map(c=>`<option value="${c}">${c}</option>`).join('');
 }
 function updateStats(){
-  document.getElementById('s-total').textContent=allRows.length;
-  const tod=new Date(); tod.setHours(0,0,0,0);
-  const tc=allRows.filter(r=>{ const d=new Date(r.timestamp||r.time||r[3]||''); if(isNaN(d))return false; const dd=new Date(d.getFullYear(),d.getMonth(),d.getDate()); return dd.getTime()===tod.getTime(); }).length;
-  document.getElementById('s-today').textContent=tc;
-  courses.forEach(c=>{ const el=document.getElementById(`cnt-${c.id}`); if(el) el.textContent=allRows.filter(r=>(r.course||r[1]||'')===c.name).length; });
+  document.getElementById('s-total').textContent = allRows.length;
+  const tod = new Date(); tod.setHours(0,0,0,0);
+  const tc = allRows.filter(r=>{
+    if(!r.timestamp) return false;
+    const d = new Date(r.timestamp);
+    if(isNaN(d)) return false;
+    const dd = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    return dd.getTime() === tod.getTime();
+  }).length;
+  document.getElementById('s-today').textContent = tc;
+  document.getElementById('s-shown').textContent = filtered.length || allRows.length;
+  courses.forEach(co=>{ 
+    const el=document.getElementById('cnt-'+co.id); 
+    if(el) el.textContent=allRows.filter(r=>r.course===co.name).length; 
+  });
 }
 
 function showBanner(m){ console.error('loadAtt error:',m); }
