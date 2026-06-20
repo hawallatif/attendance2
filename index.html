@@ -359,7 +359,9 @@ tbody tr:hover{background:rgba(59,130,246,.06)}
 
 <script>
 // ═══════════════════════════════════════════════════
-const API_URL = "https://script.google.com/macros/s/AKfycbxvgp5F-TwIzYFlTNbqnoh_c9Tvi9UqWz7-EFhA0r-skz_NNdFxVGsNMWwah1BLr7KMQQ/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzQHF3T5_PNqbsEk08DLwotA_BAFqH2AEsHIM1qgZAgcCmfzAq819qutySPWf0-iKTLKQ/exec";
+const SHEET_ID = "PASTE_YOUR_SHEET_ID_HERE";
+const SHEET_CSV = "https://docs.google.com/spreadsheets/d/"+SHEET_ID+"/gviz/tq?tqx=out:json&sheet=Sheet1";
 
 // ── DEFAULT DATA ──
 let stages = JSON.parse(localStorage.getItem('att_stages') || 'null') || [
@@ -552,21 +554,25 @@ async function loadAtt(){
   hideBanner();
   document.getElementById('att-body').innerHTML='<div class="loading"><div class="spin"></div>داتا دێتێت...</div>';
   try{
-    // Apps Script with CORS: fetch directly
-    const res  = await fetch(API_URL, {
-      method: 'GET',
-      mode: 'cors',
-      redirect: 'follow'
+    // Google Sheets Visualization API — no CORS issues, always works
+    if(SHEET_ID === 'PASTE_YOUR_SHEET_ID_HERE') throw new Error('Sheet ID نییە — تکایە SHEET_ID زیاد بکە');
+    const res  = await fetch(SHEET_CSV);
+    const text = await res.text();
+    // Response is: /*O_o*/\ngoogle.visualization.Query.setResponse({...})
+    const match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+    if(!match) throw new Error('Sheet response format unexpected');
+    const json = JSON.parse(match[1]);
+    const cols = json.table.cols.map(c => c.label);
+    const rows = json.table.rows.map(r => {
+      const obj = {};
+      r.c.forEach((cell, i) => { obj[cols[i]] = cell ? cell.v : ''; });
+      return obj;
     });
-    if(!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
-
-    let raw = Array.isArray(data) ? data : (data.rows || []);
-    allRows = raw.map(r=>({
-      name:      r.name||r.Name||r.NAME||'',
-      course:    r.course||r.Course||r.COURSE||'',
-      stage:     r.stage||r.Stage||r.STAGE||'',
-      timestamp: r.timestamp||r.Timestamp||r.Time||r.time||''
+    allRows = rows.map(r=>({
+      name:      r.Name      || r.name      || '',
+      course:    r.Course    || r.course    || '',
+      stage:     r.stage     || r.Stage     || '',
+      timestamp: r.Time      || r.time      || r.timestamp || ''
     }));
     applyF(); updateStats(); populateStageFilter(); populateCourseFilter(); hideBanner();
   }catch(err){
