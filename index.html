@@ -168,7 +168,7 @@ tbody tr:hover{background:rgba(59,130,246,.06)}
 <body>
 
 <!-- ══ ADMIN PAGE ══ -->
-<div id="pg-admin" class="page on">
+<div id="pg-admin" class="page" style="display:none">
 <header>
   <div class="hl">
     <div class="hico">🎓</div>
@@ -245,13 +245,18 @@ tbody tr:hover{background:rgba(59,130,246,.06)}
 </div>
 
 <!-- ══ CHECK-IN PAGE ══ -->
-<div id="pg-ci" class="page">
+<div id="pg-ci" class="page" style="display:none">
   <div class="cicard">
     <div id="ci-nf" style="display:none">
       <div style="font-size:44px;margin-bottom:10px">❌</div>
       <h2>دەرس نەدۆزرایەوە</h2>
     </div>
     <div id="ci-form">
+      <div style="text-align:center;margin-bottom:16px">
+        <div style="font-size:32px">📚</div>
+        <div style="font-size:18px;font-weight:900;margin-top:6px" id="ci-course-name">—</div>
+        <div style="font-size:12px;color:var(--txt2);margin-top:2px">تۆمارکردنی ئامادەبوون</div>
+      </div>
       <div class="cig">
         <label>قۆناغ</label>
         <select id="ci-stage"><option value="">— قۆناغ هەڵبژێرە —</option></select>
@@ -347,8 +352,19 @@ function stName(id){ const s=stages.find(x=>x.id===id); return s?s.name:id; }
 // ════ ROUTER ════
 function route(){
   const p=new URLSearchParams(location.search), cid=p.get('course');
-  if(cid){ document.getElementById('pg-ci').classList.add('on'); initCI(cid); }
-  else   { document.getElementById('pg-admin').classList.add('on'); initAdmin(); }
+  if(cid){
+    // Student check-in — hide admin, show only check-in card
+    document.getElementById('pg-admin').style.display='none';
+    document.getElementById('pg-ci').style.display='flex';
+    document.getElementById('pg-ci').classList.add('on');
+    initCI(cid);
+  } else {
+    // Admin dashboard
+    document.getElementById('pg-ci').style.display='none';
+    document.getElementById('pg-admin').style.display='block';
+    document.getElementById('pg-admin').classList.add('on');
+    initAdmin();
+  }
 }
 
 // ════ ADMIN ════
@@ -601,7 +617,7 @@ function initCI(cid){
   const urlName=params.get('name'), urlStage=params.get('stage');
   _course=courses.find(c=>c.id===cid)||(urlName?{id:cid,name:decodeURIComponent(urlName),stage:'s1'}:null);
   if(!_course){ document.getElementById('ci-form').style.display='none'; document.getElementById('ci-nf').style.display='block'; return; }
-  // course name stored in _course.name
+  document.getElementById('ci-course-name').textContent = _course.name;
   const sel=document.getElementById('ci-stage');
   const sl=urlStage?decodeURIComponent(urlStage):'';
   if(stages.length){
