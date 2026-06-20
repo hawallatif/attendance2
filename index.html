@@ -219,22 +219,7 @@ tbody tr:hover{background:rgba(59,130,246,.06)}
 
   <!-- ─── ATTENDANCE TAB ─── -->
   <div id="tab-att" style="display:none">
-    <div class="err-banner" id="err-b">
-      <strong>⚠️ کێشە لە بارکردنی داتا — Apps Script پێویستە doGet هەبێت</strong>
-      کۆدی خوارەوە بخەرە Google Apps Script و دووبارە Deploy بکە:
-      <code>function doGet(e){
-  var sh=SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Sheet1");
-  var vals=sh.getDataRange().getValues();
-  var hdr=vals[0];
-  var rows=vals.slice(1).map(function(r){var o={};hdr.forEach(function(h,i){o[h]=r[i]});return o});
-  var cb=e.parameter.callback;
-  var json=JSON.stringify({rows:rows});
-  var out=cb
-    ? ContentService.createTextOutput(cb+'('+json+')').setMimeType(ContentService.MimeType.JAVASCRIPT)
-    : ContentService.createTextOutput(json).setMimeType(ContentService.MimeType.JSON);
-  return out;
-}</code>
-    </div>
+    <div class="err-banner" id="err-b" style="display:none"></div>
 
     <div class="sec-hdr">
       <div class="sec-title">📋 تۆمارەکانی ئامادەبوون</div>
@@ -566,29 +551,28 @@ async function loadAtt(){
   document.getElementById('att-body').innerHTML='<div class="loading"><div class="spin"></div>داتا دێتێت...</div>';
   try{
     // Google Sheets Visualization API — no CORS issues, always works
-    if(SHEET_ID === 'PASTE_YOUR_SHEET_ID_HERE') throw new Error('Sheet ID نییە — تکایە SHEET_ID زیاد بکە');
     const res  = await fetch(SHEET_CSV);
+    if(!res.ok) throw new Error('HTTP '+res.status);
     const text = await res.text();
-    // Response is: /*O_o*/\ngoogle.visualization.Query.setResponse({...})
-    const match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
-    if(!match) throw new Error('Sheet response format unexpected');
-    const json = JSON.parse(match[1]);
-    const cols = json.table.cols.map(c => c.label);
-    const rows = json.table.rows.map(r => {
+    const match = text.match(/setResponse\((\{[\s\S]*\})\)/);
+    if(!match) throw new Error('format error');
+    const gviz = JSON.parse(match[1]);
+    const cols = gviz.table.cols.map(col => col.label);
+    const rows = gviz.table.rows.map(row => {
       const obj = {};
-      r.c.forEach((cell, i) => { obj[cols[i]] = cell ? cell.v : ''; });
+      row.c.forEach((cell, i) => { obj[cols[i]] = (cell && cell.v != null) ? cell.v : ''; });
       return obj;
     });
     allRows = rows.map(r=>({
-      name:      r.Name      || r.name      || '',
-      course:    r.Course    || r.course    || '',
-      stage:     r.stage     || r.Stage     || '',
-      timestamp: parseGVizDate(r.Time || r.time || r.timestamp || '')
-    }));
+      name:      r['Name']   || r['name']   || '',
+      course:    r['Course'] || r['course'] || '',
+      stage:     r['stage']  || r['Stage']  || '',
+      timestamp: parseGVizDate(r['Time'] || r['time'] || '')
+    })).filter(r => r.name);
     applyF(); updateStats(); populateStageFilter(); populateCourseFilter(); hideBanner();
   }catch(err){
-    showBanner(err.message);
-    document.getElementById('att-body').innerHTML='<div class="empty"><div class="ei">⚠️</div><p>داتا نەگەیشت</p><p style="font-size:12px;margin-top:6px;color:var(--text2)">'+err.message+'</p></div>';
+    console.error('loadAtt:', err);
+    document.getElementById('att-body').innerHTML='<div class="empty"><div class="ei">⚠️</div><p>داتا نەگەیشت</p><p style="font-size:12px;margin-top:6px;color:var(--text2)">'+err.message+'</p><button onclick="loadAtt()" style="margin-top:12px;padding:8px 18px;background:var(--accent);border:none;border-radius:8px;color:#fff;font-family:inherit;font-size:13px;cursor:pointer">دووبارە هەوڵ بدە</button></div>';
   }
   btn.classList.remove('spinning');
 }
@@ -678,11 +662,8 @@ function updateStats(){
   courses.forEach(c=>{ const el=document.getElementById(`cnt-${c.id}`); if(el) el.textContent=allRows.filter(r=>(r.course||r[1]||'')===c.name).length; });
 }
 
-function showBanner(m){ 
-  document.getElementById('err-b').style.display='block';
-  console.error('Attendance error:',m);
-}
-function hideBanner(){ document.getElementById('err-b').style.display='none'; }
+function showBanner(m){ console.error('loadAtt error:',m); }
+function hideBanner(){ }
 
 // ═══════════════════════════════════════════════════
 // CHECK-IN
