@@ -322,8 +322,20 @@ const API_URL   = "https://script.google.com/macros/s/AKfycbw3uQqcr3Q8vAOsTXNW8q
 const SHEET_ID  = "1mQfecoZkoKLtJyPa2cbggy7MiDEf_dYjprVad-2b_DY";
 const SHEET_URL = "https://docs.google.com/spreadsheets/d/"+SHEET_ID+"/gviz/tq?tqx=out:json&sheet=Sheet1";
 
-let stages  = JSON.parse(localStorage.getItem('att_stages')  || 'null') || [{id:'s1',name:'قۆناغی یەکەم'},{id:'s2',name:'قۆناغی دووەم'},{id:'s3',name:'قۆناغی سێیەم'},{id:'s4',name:'قۆناغی چوارەم'}];
-let courses = JSON.parse(localStorage.getItem('att_courses') || 'null') || [{id:'c1',name:'بیرکاری',stage:'s1'},{id:'c2',name:'فیزیا',stage:'s1'},{id:'c3',name:'کیمیا',stage:'s2'},{id:'c4',name:'ئینگلیزی',stage:'s2'},{id:'c5',name:'مێژوو',stage:'s3'},{id:'c6',name:'کۆمپیوتەر',stage:'s3'}];
+const DEFAULT_STAGES  = [{id:'s1',name:'قۆناغی یەکەم'},{id:'s2',name:'قۆناغی دووەم'},{id:'s3',name:'قۆناغی سێیەم'},{id:'s4',name:'قۆناغی چوارەم'}];
+const DEFAULT_COURSES = [{id:'c1',name:'بیرکاری',stage:'s1'},{id:'c2',name:'فیزیا',stage:'s1'},{id:'c3',name:'کیمیا',stage:'s2'},{id:'c4',name:'ئینگلیزی',stage:'s2'},{id:'c5',name:'مێژوو',stage:'s3'},{id:'c6',name:'کۆمپیوتەر',stage:'s3'}];
+
+function loadFromStorage(key, def){
+  try{
+    const v = localStorage.getItem(key);
+    if(!v || v==='null') return JSON.parse(JSON.stringify(def));
+    const p = JSON.parse(v);
+    return (Array.isArray(p) && p.length > 0) ? p : JSON.parse(JSON.stringify(def));
+  }catch(e){ return JSON.parse(JSON.stringify(def)); }
+}
+
+let stages  = loadFromStorage('att_stages',  DEFAULT_STAGES);
+let courses = loadFromStorage('att_courses', DEFAULT_COURSES);
 let allRows=[], filtered=[], dateMode='all', customDate='', activeStage='';
 
 function save(){ localStorage.setItem('att_stages',JSON.stringify(stages)); localStorage.setItem('att_courses',JSON.stringify(courses)); }
