@@ -547,7 +547,7 @@ async function loadAtt(){
   document.getElementById('att-body').innerHTML='<div class="loading"><div class="spin"></div>داتا دێتێت...</div>';
   try{
     // JSONP is the only reliable method for Google Apps Script (bypasses CORS)
-    const data = await jsonp(API_URL+'?action=get&t='+Date.now());
+    const data = await jsonp(API_URL+'?t='+Date.now());
     if(!data) throw new Error('داتا نەگەیشت');
     let raw=[];
     if(Array.isArray(data))            raw=data;
