@@ -8,484 +8,441 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;400;600;700;900&display=swap');
 :root{
-  --bg:#0f1923;--surface:#1a2636;--surface2:#243447;--surface3:#1e3050;
-  --accent:#3b82f6;--accent2:#06b6d4;
-  --green:#10b981;--red:#ef4444;--yellow:#f59e0b;--purple:#8b5cf6;
-  --text:#f0f6ff;--text2:#8ba5c2;--border:#2d4260;
-  --radius:14px;--shadow:0 4px 24px rgba(0,0,0,.45);
+  --bg:#0f1923;--surf:#1a2636;--surf2:#243447;
+  --acc:#3b82f6;--acc2:#06b6d4;
+  --grn:#10b981;--red:#ef4444;--pur:#8b5cf6;
+  --txt:#f0f6ff;--txt2:#8ba5c2;--bdr:#2d4260;
+  --rad:14px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Noto Kufi Arabic',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-.page{display:none}.page.active{display:block}
-#page-checkin{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+body{font-family:'Noto Kufi Arabic',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh}
+.page{display:none}.page.on{display:block}
+#pg-ci{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
 
-/* ── HEADER ── */
-header{background:linear-gradient(135deg,#0d2137,#1a3a5c);border-bottom:1px solid var(--border);padding:16px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
-.hdr-left{display:flex;align-items:center;gap:12px}
-.hdr-icon{width:44px;height:44px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:20px}
+/* HEADER */
+header{background:linear-gradient(135deg,#0d2137,#1a3a5c);border-bottom:1px solid var(--bdr);padding:16px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.hl{display:flex;align-items:center;gap:12px}
+.hico{width:44px;height:44px;background:linear-gradient(135deg,var(--acc),var(--acc2));border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:20px}
 header h1{font-size:18px;font-weight:700}
-header p{font-size:12px;color:var(--text2);margin-top:2px}
-.online-badge{background:rgba(16,185,129,.15);color:var(--green);border:1px solid rgba(16,185,129,.3);padding:5px 12px;border-radius:18px;font-size:12px;display:flex;align-items:center;gap:5px}
-.pulse{width:7px;height:7px;background:var(--green);border-radius:50%;animation:pulse 2s infinite}
+header p{font-size:12px;color:var(--txt2);margin-top:2px}
+.obadge{background:rgba(16,185,129,.15);color:var(--grn);border:1px solid rgba(16,185,129,.3);padding:5px 12px;border-radius:18px;font-size:12px;display:flex;align-items:center;gap:5px}
+.pulse{width:7px;height:7px;background:var(--grn);border-radius:50%;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
 
-/* ── CONTAINER ── */
-.wrap{max-width:1440px;margin:0 auto;padding:24px 22px}
+/* WRAP */
+.wrap{max-width:1440px;margin:0 auto;padding:22px 20px}
 
-/* ── STATS ── */
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:24px}
-.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;display:flex;align-items:center;gap:12px;transition:all .2s}
-.stat:hover{transform:translateY(-2px);border-color:var(--accent)}
-.stat-ico{font-size:24px}
-.stat-lbl{font-size:11px;color:var(--text2);margin-bottom:2px}
-.stat-val{font-size:24px;font-weight:900;color:var(--accent);line-height:1}
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:22px}
+.stat{background:var(--surf);border:1px solid var(--bdr);border-radius:var(--rad);padding:16px;display:flex;align-items:center;gap:10px;transition:all .2s}
+.stat:hover{transform:translateY(-2px);border-color:var(--acc)}
+.sico{font-size:22px}
+.slbl{font-size:11px;color:var(--txt2);margin-bottom:2px}
+.sval{font-size:22px;font-weight:900;color:var(--acc);line-height:1}
 
-/* ── TABS ── */
-.tabs{display:flex;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:5px;margin-bottom:22px;overflow-x:auto}
-.tab{padding:9px 18px;border-radius:8px;border:none;background:transparent;color:var(--text2);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
-.tab.on{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
+/* TABS */
+.tabs{display:flex;gap:6px;background:var(--surf);border:1px solid var(--bdr);border-radius:12px;padding:5px;margin-bottom:20px;overflow-x:auto}
+.tab{padding:9px 18px;border-radius:8px;border:none;background:transparent;color:var(--txt2);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
+.tab.on{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff}
 
-/* ── STAGES ── */
-.stages-row{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;align-items:center}
-.stage-btn{padding:9px 20px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text2);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px}
-.stage-btn:hover{border-color:var(--accent);color:var(--accent)}
-.stage-btn.on{background:linear-gradient(135deg,var(--accent),var(--accent2));border-color:transparent;color:#fff}
-.stage-add-btn{margin-right:auto;padding:8px 14px;border-radius:9px;border:1.5px dashed var(--border);background:transparent;color:var(--text2);font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s}
-.stage-add-btn:hover{border-color:var(--green);color:var(--green)}
+/* STAGES */
+.strow{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;align-items:center}
+.stbtn{padding:8px 18px;border-radius:10px;border:1.5px solid var(--bdr);background:var(--surf2);color:var(--txt2);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s}
+.stbtn:hover{border-color:var(--acc);color:var(--acc)}
+.stbtn.on{background:linear-gradient(135deg,var(--acc),var(--acc2));border-color:transparent;color:#fff}
+.staddbtn{padding:7px 13px;border-radius:9px;border:1.5px dashed var(--bdr);background:transparent;color:var(--txt2);font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;margin-right:auto}
+.staddbtn:hover{border-color:var(--grn);color:var(--grn)}
 
-/* ── QR GRID ── */
-.qr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:24px}
-.qr-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;display:flex;flex-direction:column;align-items:center;gap:12px;transition:all .2s;position:relative;overflow:hidden}
-.qr-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2))}
-.qr-card:hover{transform:translateY(-3px);border-color:var(--accent);box-shadow:var(--shadow)}
-.qr-top{width:100%;display:flex;justify-content:space-between;align-items:flex-start}
-.qr-name{font-size:14px;font-weight:700}
-.qr-stage{font-size:11px;color:var(--accent2);margin-top:2px}
-.qr-cnt{display:flex;align-items:center;gap:4px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);color:var(--green);padding:4px 9px;border-radius:14px;font-size:12px;font-weight:700}
-.qr-box{background:#fff;padding:9px;border-radius:10px;width:162px;height:162px;display:flex;align-items:center;justify-content:center}
-.qr-box canvas,.qr-box img{width:144px!important;height:144px!important}
-.qr-acts{display:flex;gap:6px;width:100%}
-.qbtn{flex:1;padding:7px 8px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-family:inherit;font-size:11px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:3px}
-.qbtn:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+/* QR GRID */
+.qrgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px;margin-bottom:22px}
+.qrcard{background:var(--surf);border:1px solid var(--bdr);border-radius:var(--rad);padding:18px;display:flex;flex-direction:column;align-items:center;gap:12px;transition:all .2s;position:relative;overflow:hidden}
+.qrcard::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--acc),var(--acc2))}
+.qrcard:hover{transform:translateY(-3px);border-color:var(--acc)}
+.qrtop{width:100%;display:flex;justify-content:space-between;align-items:flex-start}
+.qrname{font-size:14px;font-weight:700}
+.qrstage{font-size:11px;color:var(--acc2);margin-top:2px}
+.qrcnt{display:flex;align-items:center;gap:4px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);color:var(--grn);padding:4px 8px;border-radius:14px;font-size:12px;font-weight:700}
+.qrbox{background:#fff;padding:8px;border-radius:10px;width:156px;height:156px;display:flex;align-items:center;justify-content:center}
+.qrbox canvas,.qrbox img{width:140px!important;height:140px!important}
+.qracts{display:flex;gap:5px;width:100%}
+.qbtn{flex:1;padding:7px 6px;border-radius:7px;border:1px solid var(--bdr);background:var(--surf2);color:var(--txt);font-family:inherit;font-size:11px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:3px}
+.qbtn:hover{background:var(--acc);border-color:var(--acc);color:#fff}
 .qbtn.del:hover{background:var(--red);border-color:var(--red)}
-.qbtn.pri{background:var(--accent);border-color:var(--accent);color:#fff}
-.no-courses{text-align:center;padding:50px 20px;color:var(--text2);grid-column:1/-1}
-.no-courses .ico{font-size:42px;margin-bottom:10px}
+.qbtn.pri{background:var(--acc);border-color:var(--acc);color:#fff}
+.nocourse{text-align:center;padding:50px 20px;color:var(--txt2);grid-column:1/-1}
 
-/* ── SECTION HDR ── */
-.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}
-.sec-title{font-size:16px;font-weight:700;display:flex;align-items:center;gap:7px}
+/* SEC HDR */
+.sechdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.sectitle{font-size:16px;font-weight:700;display:flex;align-items:center;gap:7px}
+.btnadd{padding:8px 14px;border-radius:9px;border:none;background:linear-gradient(135deg,var(--grn),#059669);color:#fff;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px}
+.btnadd:hover{opacity:.88}
 
-/* ── DATE NAV ── */
-.date-nav{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap}
-.dbn{padding:7px 13px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
-.dbn:hover,.dbn.on{background:var(--accent);border-color:var(--accent);color:#fff}
-input[type=date]{padding:7px 11px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;font-size:12px}
-input[type=date]:focus{outline:none;border-color:var(--accent)}
-.date-lbl{font-size:13px;font-weight:700;color:var(--accent2);margin-right:auto}
+/* DATE NAV */
+.dnav{display:flex;align-items:center;gap:7px;margin-bottom:14px;flex-wrap:wrap}
+.dbn{padding:7px 12px;border-radius:8px;border:1px solid var(--bdr);background:var(--surf2);color:var(--txt2);font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
+.dbn:hover,.dbn.on{background:var(--acc);border-color:var(--acc);color:#fff}
+input[type=date]{padding:7px 10px;background:var(--surf2);border:1px solid var(--bdr);border-radius:8px;color:var(--txt);font-family:inherit;font-size:12px}
+input[type=date]:focus{outline:none;border-color:var(--acc)}
+.dlbl{font-size:13px;font-weight:700;color:var(--acc2);margin-right:auto}
 
-/* ── FILTER BAR ── */
-.fbar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
-.fbar select,.fbar input[type=text]{padding:9px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:inherit;font-size:13px;direction:rtl}
-.fbar select:focus,.fbar input:focus{outline:none;border-color:var(--accent)}
-.rec-info{margin-right:auto;color:var(--text2);font-size:12px}
-.rec-info strong{color:var(--text)}
+/* FILTER */
+.fbar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
+.fbar select,.fbar input[type=text]{padding:8px 12px;background:var(--surf2);border:1px solid var(--bdr);border-radius:9px;color:var(--txt);font-family:inherit;font-size:12px;direction:rtl}
+.fbar select:focus,.fbar input:focus{outline:none;border-color:var(--acc)}
+.recinf{margin-right:auto;color:var(--txt2);font-size:12px}
+.recinf strong{color:var(--txt)}
 
-/* ── TABLE ── */
-.tbl-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border)}
+/* TABLE */
+.twrap{overflow-x:auto;border-radius:var(--rad);border:1px solid var(--bdr)}
 table{width:100%;border-collapse:collapse}
-thead tr{background:var(--surface2)}
-th{padding:12px 14px;font-size:11px;color:var(--text2);font-weight:700;text-align:right;white-space:nowrap;text-transform:uppercase;letter-spacing:.4px}
-td{padding:11px 14px;font-size:13px;border-top:1px solid var(--border);vertical-align:middle}
+thead tr{background:var(--surf2)}
+th{padding:11px 14px;font-size:11px;color:var(--txt2);font-weight:700;text-align:right;white-space:nowrap}
+td{padding:10px 14px;font-size:13px;border-top:1px solid var(--bdr);vertical-align:middle}
 tbody tr:hover{background:rgba(59,130,246,.06)}
-.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:14px;font-size:11px;font-weight:600}
-.bg{background:rgba(16,185,129,.15);color:var(--green);border:1px solid rgba(16,185,129,.2)}
-.bb{background:rgba(59,130,246,.15);color:var(--accent);border:1px solid rgba(59,130,246,.2)}
-.bp{background:rgba(139,92,246,.15);color:var(--purple);border:1px solid rgba(139,92,246,.2)}
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600}
+.bg{background:rgba(16,185,129,.15);color:var(--grn);border:1px solid rgba(16,185,129,.2)}
+.bb{background:rgba(59,130,246,.15);color:var(--acc);border:1px solid rgba(59,130,246,.2)}
+.bp{background:rgba(139,92,246,.15);color:var(--pur);border:1px solid rgba(139,92,246,.2)}
 
-/* ── LOADING / EMPTY ── */
-.loading{text-align:center;padding:50px 20px;color:var(--text2)}
-.spin{width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:rot .7s linear infinite;margin:0 auto 12px}
+/* LOADING/EMPTY */
+.loading{text-align:center;padding:50px 20px;color:var(--txt2)}
+.spin{width:32px;height:32px;border:3px solid var(--bdr);border-top-color:var(--acc);border-radius:50%;animation:rot .7s linear infinite;margin:0 auto 12px}
 @keyframes rot{to{transform:rotate(360deg)}}
-.empty{text-align:center;padding:50px 20px;color:var(--text2)}
-.empty .ei{font-size:44px;margin-bottom:10px}
+.empty{text-align:center;padding:50px 20px;color:var(--txt2)}
+.ei{font-size:40px;margin-bottom:10px}
+.btnref{display:flex;align-items:center;gap:5px;padding:8px 14px;background:var(--surf2);border:1px solid var(--bdr);border-radius:9px;color:var(--txt);font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s}
+.btnref:hover{border-color:var(--acc);color:var(--acc)}
+.btnref.spinning svg{animation:rot .7s linear infinite}
 
-/* ── BUTTONS ── */
-.btn-ref{display:flex;align-items:center;gap:5px;padding:9px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s}
-.btn-ref:hover{border-color:var(--accent);color:var(--accent)}
-.btn-ref.spinning svg{animation:rot .7s linear infinite}
-.btn-add{padding:9px 16px;border-radius:9px;border:none;background:linear-gradient(135deg,var(--green),#059669);color:#fff;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .2s;display:flex;align-items:center;gap:5px}
-.btn-add:hover{opacity:.88}
-
-/* ── ERROR BANNER ── */
-.err-banner{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:12px;padding:14px 18px;margin-bottom:14px;display:none;font-size:13px;color:#fca5a5;line-height:1.7}
-.err-banner strong{display:block;margin-bottom:4px;font-size:14px}
-.err-banner code{display:block;margin-top:8px;padding:10px;background:rgba(0,0,0,.35);border-radius:6px;font-size:10px;direction:ltr;text-align:left;word-break:break-all;color:#93c5fd;white-space:pre}
-
-/* ── MODAL ── */
-.mo{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:200;padding:18px}
+/* MODAL */
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:200;padding:16px}
 .mo.open{display:flex}
-.mbox{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:28px;width:100%;max-width:540px;max-height:92vh;overflow-y:auto;animation:su .2s ease}
-@keyframes su{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
-.mtitle{font-size:18px;font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:8px}
-.fg{margin-bottom:13px}
-.fg label{display:block;font-size:11px;color:var(--text2);margin-bottom:4px;font-weight:600}
-.fg input,.fg select{width:100%;padding:10px 13px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:inherit;font-size:13px;direction:rtl;transition:border-color .2s}
-.fg input:focus,.fg select:focus{outline:none;border-color:var(--accent)}
-.macts{display:flex;gap:8px;margin-top:20px}
-.mbtn{flex:1;padding:11px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:9px;color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:opacity .2s}
+.mbox{background:var(--surf);border:1px solid var(--bdr);border-radius:20px;padding:26px;width:100%;max-width:520px;max-height:92vh;overflow-y:auto;animation:su .2s ease}
+@keyframes su{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.mtitle{font-size:17px;font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.fg{margin-bottom:12px}
+.fg label{display:block;font-size:11px;color:var(--txt2);margin-bottom:4px;font-weight:600}
+.fg input,.fg select{width:100%;padding:10px 12px;background:var(--surf2);border:1px solid var(--bdr);border-radius:9px;color:var(--txt);font-family:inherit;font-size:13px;direction:rtl;transition:border-color .2s}
+.fg input:focus,.fg select:focus{outline:none;border-color:var(--acc)}
+.macts{display:flex;gap:8px;margin-top:18px}
+.mbtn{flex:1;padding:10px;background:linear-gradient(135deg,var(--acc),var(--acc2));border:none;border-radius:9px;color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer}
 .mbtn:hover{opacity:.9}
-.mcancel{padding:11px 18px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;color:var(--text2);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
-.mcancel:hover{border-color:var(--red);color:var(--red)}
-.mdanger{flex:1;padding:11px;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);border-radius:9px;color:var(--red);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s}
-.mdanger:hover{background:var(--red);color:#fff}
+.mcan{padding:10px 16px;background:var(--surf2);border:1px solid var(--bdr);border-radius:9px;color:var(--txt2);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
+.mcan:hover{border-color:var(--red);color:var(--red)}
+.mdel{flex:1;padding:10px;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);border-radius:9px;color:var(--red);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s}
+.mdel:hover{background:var(--red);color:#fff}
 
-/* ── CHECK-IN PAGE ── */
-.cicard{background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:32px 28px;width:100%;max-width:420px;text-align:center;position:relative;overflow:hidden}
-.cicard::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--accent),var(--accent2))}
-.ci-logo{font-size:48px;margin-bottom:8px}
-.ci-badge{display:inline-block;background:linear-gradient(135deg,rgba(59,130,246,.2),rgba(6,182,212,.2));border:1px solid rgba(59,130,246,.4);color:var(--accent2);padding:5px 16px;border-radius:18px;font-size:13px;font-weight:700;margin-bottom:14px}
-.cicard h1{font-size:22px;font-weight:900;margin-bottom:5px}
-.ci-sub{font-size:13px;color:var(--text2);margin-bottom:24px}
-.ci-g{margin-bottom:16px;text-align:right}
-.ci-g label{display:block;font-size:11px;color:var(--text2);font-weight:600;margin-bottom:5px}
-.ci-g input,.ci-g select{width:100%;padding:13px 15px;background:rgba(255,255,255,.05);border:1.5px solid var(--border);border-radius:11px;color:var(--text);font-family:inherit;font-size:15px;direction:rtl;transition:border-color .2s,box-shadow .2s}
-.ci-g input:focus,.ci-g select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(59,130,246,.15)}
-.ci-g input.er,.ci-g select.er{border-color:var(--red)}
-.ci-err{color:var(--red);font-size:12px;margin-top:4px;display:none}
-.ci-submit{width:100%;padding:14px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:11px;color:#fff;font-family:inherit;font-size:16px;font-weight:700;cursor:pointer;transition:opacity .2s,transform .1s;display:flex;align-items:center;justify-content:center;gap:7px;margin-bottom:12px}
-.ci-submit:hover{opacity:.9}.ci-submit:active{transform:scale(.98)}.ci-submit:disabled{opacity:.5;cursor:not-allowed}
-.ci-clk{color:var(--text2);font-size:11px}
+/* CHECK-IN */
+.cicard{background:var(--surf);border:1px solid var(--bdr);border-radius:22px;padding:30px 26px;width:100%;max-width:420px;text-align:center;position:relative;overflow:hidden}
+.cicard::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--acc),var(--acc2))}
+.cilogo{font-size:46px;margin-bottom:8px}
+.cibadge{display:inline-block;background:linear-gradient(135deg,rgba(59,130,246,.2),rgba(6,182,212,.2));border:1px solid rgba(59,130,246,.4);color:var(--acc2);padding:5px 14px;border-radius:18px;font-size:13px;font-weight:700;margin-bottom:12px}
+.cicard h1{font-size:21px;font-weight:900;margin-bottom:4px}
+.cisub{font-size:13px;color:var(--txt2);margin-bottom:22px}
+.cig{margin-bottom:14px;text-align:right}
+.cig label{display:block;font-size:11px;color:var(--txt2);font-weight:600;margin-bottom:4px}
+.cig input,.cig select{width:100%;padding:12px 14px;background:rgba(255,255,255,.05);border:1.5px solid var(--bdr);border-radius:11px;color:var(--txt);font-family:inherit;font-size:15px;direction:rtl;transition:border-color .2s}
+.cig input:focus,.cig select:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px rgba(59,130,246,.15)}
+.cig input.er{border-color:var(--red)}
+.cierr{color:var(--red);font-size:12px;margin-top:4px;display:none}
+.cisub-btn{width:100%;padding:13px;background:linear-gradient(135deg,var(--acc),var(--acc2));border:none;border-radius:11px;color:#fff;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;margin-bottom:12px;transition:opacity .2s}
+.cisub-btn:hover{opacity:.9}.cisub-btn:disabled{opacity:.5;cursor:not-allowed}
+.ciclk{color:var(--txt2);font-size:11px}
 #ci-suc{display:none;flex-direction:column;align-items:center;gap:12px}
-.sico{width:84px;height:84px;background:rgba(16,185,129,.15);border:2px solid rgba(16,185,129,.4);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:38px;animation:pop .4s cubic-bezier(.175,.885,.32,1.275)}
+.sico2{width:80px;height:80px;background:rgba(16,185,129,.15);border:2px solid rgba(16,185,129,.4);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:36px;animation:pop .4s cubic-bezier(.175,.885,.32,1.275)}
 @keyframes pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
-.stitle{font-size:20px;font-weight:900;color:var(--green)}
-.sname{font-size:24px;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.sdet{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);border-radius:11px;padding:12px 18px;width:100%}
+.stitle2{font-size:19px;font-weight:900;color:var(--grn)}
+.sname2{font-size:22px;font-weight:900;background:linear-gradient(135deg,var(--acc),var(--acc2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sdet{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);border-radius:11px;padding:12px 16px;width:100%}
 .srow{display:flex;justify-content:space-between;align-items:center;padding:4px 0}
 .srow:not(:last-child){border-bottom:1px solid rgba(255,255,255,.06)}
-.sl{color:var(--text2);font-size:11px}.sv{font-weight:700;font-size:12px}
+.sl{color:var(--txt2);font-size:11px}.sv{font-weight:700;font-size:12px}
 
 @media(max-width:600px){
   header{padding:12px 14px}.wrap{padding:12px 10px}
-  .qr-grid{grid-template-columns:1fr}.mbox{padding:18px}
+  .qrgrid{grid-template-columns:1fr}.mbox{padding:18px}
   .cicard{padding:22px 16px}.stats{grid-template-columns:repeat(2,1fr)}
 }
 </style>
 </head>
 <body>
 
-<!-- ══════════════════════ PAGE: ADMIN ══════════════════════ -->
-<div id="page-admin" class="page active">
+<!-- ══ ADMIN PAGE ══ -->
+<div id="pg-admin" class="page on">
 <header>
-  <div class="hdr-left">
-    <div class="hdr-icon">🎓</div>
+  <div class="hl">
+    <div class="hico">🎓</div>
     <div><h1>سیستەمی ئامادەبوون</h1><p>پانێڵی سەرۆکی بەش</p></div>
   </div>
-  <div class="online-badge"><span class="pulse"></span>ئۆنلاین</div>
+  <div class="obadge"><span class="pulse"></span>ئۆنلاین</div>
 </header>
 
 <div class="wrap">
-
-  <!-- Stats -->
   <div class="stats">
-    <div class="stat"><div class="stat-ico">📚</div><div><div class="stat-lbl">کۆی دەرسەکان</div><div class="stat-val" id="s-total-c">0</div></div></div>
-    <div class="stat"><div class="stat-ico">👥</div><div><div class="stat-lbl">کۆی ئامادەبوون</div><div class="stat-val" id="s-total">—</div></div></div>
-    <div class="stat"><div class="stat-ico">📅</div><div><div class="stat-lbl">ئەمڕۆ</div><div class="stat-val" id="s-today">—</div></div></div>
-    <div class="stat"><div class="stat-ico">🔍</div><div><div class="stat-lbl">نمایشکراو</div><div class="stat-val" id="s-shown">—</div></div></div>
-    <div class="stat"><div class="stat-ico">⏰</div><div><div class="stat-lbl">ئێستا</div><div class="stat-val" id="s-clk" style="font-size:14px;margin-top:3px">—</div></div></div>
+    <div class="stat"><div class="sico">📚</div><div><div class="slbl">کۆی دەرسەکان</div><div class="sval" id="s-courses">0</div></div></div>
+    <div class="stat"><div class="sico">👥</div><div><div class="slbl">کۆی ئامادەبوون</div><div class="sval" id="s-total">—</div></div></div>
+    <div class="stat"><div class="sico">📅</div><div><div class="slbl">ئەمڕۆ</div><div class="sval" id="s-today">—</div></div></div>
+    <div class="stat"><div class="sico">🔍</div><div><div class="slbl">نمایشکراو</div><div class="sval" id="s-shown">—</div></div></div>
+    <div class="stat"><div class="sico">⏰</div><div><div class="slbl">ئێستا</div><div class="sval" id="s-clk" style="font-size:14px;margin-top:2px">—</div></div></div>
   </div>
 
-  <!-- Tabs -->
   <div class="tabs">
     <button class="tab on" id="t-qr"  onclick="showTab('qr')">📱 QR کۆدەکان</button>
     <button class="tab"    id="t-att" onclick="showTab('att')">📋 ئامادەبوون</button>
   </div>
 
-  <!-- ─── QR TAB ─── -->
+  <!-- QR TAB -->
   <div id="tab-qr">
-    <!-- Stages row -->
-    <div class="stages-row" id="stages-row"></div>
-
-    <div class="sec-hdr">
-      <div class="sec-title" id="qr-sec-title">📱 دەرسەکان</div>
-      <div style="display:flex;gap:8px">
-        <button class="btn-add" onclick="openAddCourse()">+ زیادکردنی دەرس</button>
-        <button class="qbtn" style="width:auto;padding:8px 14px" onclick="openEditStages()">✏️ قۆناغەکان</button>
+    <div class="strow" id="strow"></div>
+    <div class="sechdr">
+      <div class="sectitle" id="qr-title">📱 دەرسەکان</div>
+      <div style="display:flex;gap:7px">
+        <button class="btnadd" onclick="openAddCourse()">➕ دەرسی نوێ</button>
+        <button class="qbtn" style="width:auto;padding:7px 12px" onclick="openEditStages()">✏️ قۆناغەکان</button>
       </div>
     </div>
-    <div class="qr-grid" id="qr-grid"></div>
+    <div class="qrgrid" id="qrgrid"></div>
   </div>
 
-  <!-- ─── ATTENDANCE TAB ─── -->
+  <!-- ATT TAB -->
   <div id="tab-att" style="display:none">
-    <div class="err-banner" id="err-b" style="display:none"></div>
-
-    <div class="sec-hdr">
-      <div class="sec-title">📋 تۆمارەکانی ئامادەبوون</div>
-      <div style="display:flex;gap:8px">
-        <button class="btn-ref" onclick="exportExcel()" style="border-color:rgba(16,185,129,.4);color:var(--green)">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    <div class="sechdr">
+      <div class="sectitle">📋 تۆمارەکانی ئامادەبوون</div>
+      <div style="display:flex;gap:7px">
+        <button class="btnref" onclick="exportExcel()" style="border-color:rgba(16,185,129,.4);color:var(--grn)">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           Export Excel
         </button>
-        <button class="btn-ref" id="ref-btn" onclick="loadAtt()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        <button class="btnref" id="refbtn" onclick="loadAtt()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
           نوێکردنەوە
         </button>
       </div>
     </div>
-
-    <!-- Date nav -->
-    <div class="date-nav">
+    <div class="dnav">
+      <button class="dbn on" id="dn-all"   onclick="setDate('all')">📂 هەموو</button>
       <button class="dbn"    id="dn-today" onclick="setDate('today')">📅 ئەمڕۆ</button>
       <button class="dbn"    id="dn-week"  onclick="setDate('week')">📆 ئەم هەفتەیە</button>
       <button class="dbn"    id="dn-month" onclick="setDate('month')">🗓️ ئەم مانگە</button>
-      <button class="dbn on" id="dn-all"   onclick="setDate('all')">📂 هەموو</button>
-      <input  type="date"    id="dn-pick"  onchange="setDate('custom')">
-      <span class="date-lbl" id="date-lbl">ئەمڕۆ</span>
+      <input type="date" id="dn-pick" onchange="setDate('custom')">
+      <span class="dlbl" id="dlbl">هەموو</span>
     </div>
-
-    <!-- Filters -->
     <div class="fbar">
       <select id="f-stage"  onchange="applyF()"><option value="">— هەموو قۆناغەکان —</option></select>
       <select id="f-course" onchange="applyF()"><option value="">— هەموو دەرسەکان —</option></select>
-      <input type="text" id="f-name" placeholder="گەڕان بە ناو..." oninput="applyF()" style="flex:1;min-width:140px">
-      <span class="rec-info" id="rec-inf"></span>
+      <input type="text" id="f-name" placeholder="گەڕان بە ناو..." oninput="applyF()" style="flex:1;min-width:120px">
+      <span class="recinf" id="recinf"></span>
     </div>
-
-    <div id="att-body"><div class="loading"><div class="spin"></div>چاوەڕوان بە...</div></div>
+    <div id="attbody"><div class="loading"><div class="spin"></div>چاوەڕوان بە...</div></div>
   </div>
+</div>
+</div>
 
-</div><!-- /wrap -->
-</div><!-- /page-admin -->
-
-<!-- ══════════════════════ PAGE: CHECK-IN ══════════════════════ -->
-<div id="page-checkin" class="page">
+<!-- ══ CHECK-IN PAGE ══ -->
+<div id="pg-ci" class="page">
   <div class="cicard">
     <div id="ci-nf" style="display:none">
-      <div style="font-size:46px;margin-bottom:10px">❌</div>
+      <div style="font-size:44px;margin-bottom:10px">❌</div>
       <h2>دەرس نەدۆزرایەوە</h2>
-      <p style="color:var(--text2);margin-top:7px">تکایە QR کۆدی دروست بکات</p>
+      <p style="color:var(--txt2);margin-top:7px">تکایە QR کۆدی دروست بکات</p>
     </div>
     <div id="ci-form">
-      <div class="ci-logo">📚</div>
-      <div class="ci-badge" id="ci-badge">...</div>
+      <div class="cilogo">📚</div>
+      <div class="cibadge" id="ci-badge">...</div>
       <h1>تۆمارکردنی ئامادەبوون</h1>
-      <p class="ci-sub">ناوی تەواوت بنووسە</p>
-      <div class="ci-g">
+      <p class="cisub">ناوی تەواوت بنووسە</p>
+      <div class="cig">
         <label>قۆناغ</label>
         <select id="ci-stage"><option value="">— قۆناغ هەڵبژێرە —</option></select>
       </div>
-      <div class="ci-g">
+      <div class="cig">
         <label>ناوی خوێندکار</label>
         <input type="text" id="ci-name" placeholder="ناوی تەواو..." autocomplete="name" autocorrect="off" spellcheck="false" onkeydown="if(event.key==='Enter')doCI()">
-        <div class="ci-err" id="ci-err">⚠️ تکایە ناوت بنووسە</div>
+        <div class="cierr" id="ci-err">⚠️ تکایە ناوت بنووسە</div>
       </div>
-      <button class="ci-submit" id="ci-btn" onclick="doCI()"><span>✓</span> تۆمارکردن</button>
-      <div class="ci-clk">🕐 <span id="ci-clk">—</span></div>
+      <button class="cisub-btn" id="ci-btn" onclick="doCI()"><span>✓</span> تۆمارکردن</button>
+      <div class="ciclk">🕐 <span id="ci-clk">—</span></div>
     </div>
     <div id="ci-suc">
-      <div class="sico">✓</div>
-      <div class="stitle">ئامادەبوونت تۆمارکرا!</div>
-      <div class="sname" id="suc-name">—</div>
+      <div class="sico2">✓</div>
+      <div class="stitle2">ئامادەبوونت تۆمارکرا!</div>
+      <div class="sname2" id="suc-name">—</div>
       <div class="sdet">
         <div class="srow"><span class="sl">دەرس</span><span class="sv" id="suc-course">—</span></div>
         <div class="srow"><span class="sl">قۆناغ</span><span class="sv" id="suc-stage">—</span></div>
         <div class="srow"><span class="sl">کات</span><span class="sv" id="suc-time">—</span></div>
-        <div class="srow"><span class="sl">دۆخ</span><span class="sv" style="color:var(--green)">✓ ئامادە</span></div>
+        <div class="srow"><span class="sl">دۆخ</span><span class="sv" style="color:var(--grn)">✓ ئامادە</span></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══ MODALS ══ -->
-<!-- Edit single course -->
-<div class="mo" id="mo-single">
+<!-- MODALS -->
+<div class="mo" id="mo-edit">
   <div class="mbox">
     <div class="mtitle">✏️ دەستکاری دەرس</div>
-    <input type="hidden" id="ms-idx">
-    <div class="fg"><label>ناوی دەرس</label><input type="text" id="ms-name"></div>
-    <div class="fg"><label>کۆدی دەرس (ID)</label><input type="text" id="ms-id"></div>
-    <div class="fg"><label>قۆناغ</label><select id="ms-stage"></select></div>
+    <input type="hidden" id="me-idx">
+    <div class="fg"><label>ناوی دەرس</label><input type="text" id="me-name"></div>
+    <div class="fg"><label>کۆدی دەرس (ID)</label><input type="text" id="me-id"></div>
+    <div class="fg"><label>قۆناغ</label><select id="me-stage"></select></div>
     <div class="macts">
-      <button class="mbtn" onclick="saveSingle()">پاشەکەوت ✓</button>
-      <button class="mdanger" onclick="deleteCourse()">🗑️ سڕینەوە</button>
-      <button class="mcancel" onclick="cm('mo-single')">داخستن</button>
+      <button class="mbtn" onclick="saveEdit()">پاشەکەوت ✓</button>
+      <button class="mdel" onclick="delCourse()">🗑️ سڕینەوە</button>
+      <button class="mcan" onclick="cm('mo-edit')">داخستن</button>
     </div>
   </div>
 </div>
-
-<!-- Add course -->
 <div class="mo" id="mo-add">
   <div class="mbox">
-    <div class="mtitle">➕ زیادکردنی دەرسی نوێ</div>
+    <div class="mtitle">➕ دەرسی نوێ</div>
     <div class="fg"><label>ناوی دەرس</label><input type="text" id="ma-name" placeholder="ناوی دەرس..."></div>
-    <div class="fg"><label>کۆدی دەرس (ID)</label><input type="text" id="ma-id" placeholder="وەک: math101"></div>
+    <div class="fg"><label>کۆدی دەرس (ID)</label><input type="text" id="ma-id" placeholder="math101"></div>
     <div class="fg"><label>قۆناغ</label><select id="ma-stage"></select></div>
     <div class="macts">
       <button class="mbtn" onclick="addCourse()">زیادکردن ✓</button>
-      <button class="mcancel" onclick="cm('mo-add')">داخستن</button>
+      <button class="mcan" onclick="cm('mo-add')">داخستن</button>
     </div>
   </div>
 </div>
-
-<!-- Edit stages -->
 <div class="mo" id="mo-stages">
   <div class="mbox">
-    <div class="mtitle">🏫 دەستکاری قۆناغەکان</div>
-    <div id="stages-fields"></div>
-    <button class="btn-add" style="margin-bottom:16px" onclick="addStageField()">+ قۆناغی نوێ</button>
+    <div class="mtitle">🏫 قۆناغەکان</div>
+    <div id="st-fields"></div>
+    <button class="btnadd" style="margin-bottom:14px;width:100%;justify-content:center" onclick="addStField()">➕ قۆناغی نوێ</button>
     <div class="macts">
       <button class="mbtn" onclick="saveStages()">پاشەکەوت ✓</button>
-      <button class="mcancel" onclick="cm('mo-stages')">داخستن</button>
+      <button class="mcan" onclick="cm('mo-stages')">داخستن</button>
     </div>
   </div>
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════
-const API_URL = "https://script.google.com/macros/s/AKfycbw3uQqcr3Q8vAOsTXNW8qFeG2sETkKKnE1GwZOtuotzQA2zfvy-4XPiIqVQ912OF2vCZA/exec";
-const SHEET_ID = "1mQfecoZkoKLtJyPa2cbggy7MiDEf_dYjprVad-2b_DY";
-const SHEET_CSV = "https://docs.google.com/spreadsheets/d/"+SHEET_ID+"/gviz/tq?tqx=out:json&sheet=Sheet1";
+// ════════════════════════════════════════════════════
+const API_URL   = "https://script.google.com/macros/s/AKfycbw3uQqcr3Q8vAOsTXNW8qFeG2sETkKKnE1GwZOtuotzQA2zfvy-4XPiIqVQ912OF2vCZA/exec";
+const SHEET_ID  = "1mQfecoZkoKLtJyPa2cbggy7MiDEf_dYjprVad-2b_DY";
+const SHEET_URL = "https://docs.google.com/spreadsheets/d/"+SHEET_ID+"/gviz/tq?tqx=out:json&sheet=Sheet1";
 
-// ── DEFAULT DATA ──
-let stages = JSON.parse(localStorage.getItem('att_stages') || 'null') || [
-  {id:'s1', name:'قۆناغی یەکەم'},
-  {id:'s2', name:'قۆناغی دووەم'},
-  {id:'s3', name:'قۆناغی سێیەم'},
-  {id:'s4', name:'قۆناغی چوارەم'}
-];
-let courses = JSON.parse(localStorage.getItem('att_courses') || 'null') || [
-  {id:'c1',name:'بیرکاری',   stage:'s1'},
-  {id:'c2',name:'فیزیا',     stage:'s1'},
-  {id:'c3',name:'کیمیا',     stage:'s2'},
-  {id:'c4',name:'ئینگلیزی',  stage:'s2'},
-  {id:'c5',name:'مێژوو',     stage:'s3'},
-  {id:'c6',name:'کۆمپیوتەر', stage:'s3'}
-];
-
+let stages  = JSON.parse(localStorage.getItem('att_stages')  || 'null') || [{id:'s1',name:'قۆناغی یەکەم'},{id:'s2',name:'قۆناغی دووەم'},{id:'s3',name:'قۆناغی سێیەم'},{id:'s4',name:'قۆناغی چوارەم'}];
+let courses = JSON.parse(localStorage.getItem('att_courses') || 'null') || [{id:'c1',name:'بیرکاری',stage:'s1'},{id:'c2',name:'فیزیا',stage:'s1'},{id:'c3',name:'کیمیا',stage:'s2'},{id:'c4',name:'ئینگلیزی',stage:'s2'},{id:'c5',name:'مێژوو',stage:'s3'},{id:'c6',name:'کۆمپیوتەر',stage:'s3'}];
 let allRows=[], filtered=[], dateMode='all', customDate='', activeStage='';
 
 function save(){ localStorage.setItem('att_stages',JSON.stringify(stages)); localStorage.setItem('att_courses',JSON.stringify(courses)); }
-function stageName(id){ const s=stages.find(x=>x.id===id); return s?s.name:id; }
+function stName(id){ const s=stages.find(x=>x.id===id); return s?s.name:id; }
 
-// ═══════════════════════════════════════════════════
-// ROUTER
-// ═══════════════════════════════════════════════════
+// ════ ROUTER ════
 function route(){
   const p=new URLSearchParams(location.search), cid=p.get('course');
-  if(cid){ show('page-checkin'); initCI(cid); }
-  else   { show('page-admin');   initAdmin(); }
+  if(cid){ document.getElementById('pg-ci').classList.add('on'); initCI(cid); }
+  else   { document.getElementById('pg-admin').classList.add('on'); initAdmin(); }
 }
-function show(id){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById(id).classList.add('active'); }
 
-// ═══════════════════════════════════════════════════
-// ADMIN
-// ═══════════════════════════════════════════════════
+// ════ ADMIN ════
 function initAdmin(){
   tick(); setInterval(tick,1000);
-  document.getElementById('dn-pick').value=todayStr();
-  buildStages(); buildQRGrid();
+  document.getElementById('dn-pick').value = new Date().toISOString().slice(0,10);
+  buildStages(); buildQR();
 }
 function tick(){ document.getElementById('s-clk').textContent=new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}); }
 
 function showTab(t){
-  document.getElementById('tab-qr').style.display  = t==='qr'  ? '':'none';
-  document.getElementById('tab-att').style.display = t==='att' ? '':'none';
+  document.getElementById('tab-qr').style.display  = t==='qr'  ? '' : 'none';
+  document.getElementById('tab-att').style.display = t==='att' ? '' : 'none';
   document.getElementById('t-qr').classList.toggle('on',  t==='qr');
   document.getElementById('t-att').classList.toggle('on', t==='att');
   if(t==='att') loadAtt();
 }
 
-// ─── STAGES BUTTONS ───
+// ════ STAGES ════
 function buildStages(){
-  const row=document.getElementById('stages-row');
-  row.innerHTML='';
+  const row=document.getElementById('strow'); row.innerHTML='';
   stages.forEach(s=>{
     const b=document.createElement('button');
-    b.className='stage-btn'+(s.id===activeStage?' on':'');
+    b.className='stbtn'+(s.id===activeStage?' on':'');
     b.textContent=s.name;
-    b.onclick=()=>{ activeStage=s.id===activeStage?'':s.id; buildStages(); buildQRGrid(); };
+    b.onclick=()=>{ activeStage=s.id===activeStage?'':s.id; buildStages(); buildQR(); };
     row.appendChild(b);
   });
   const add=document.createElement('button');
-  add.className='stage-add-btn'; add.textContent='+ قۆناغ';
+  add.className='staddbtn'; add.textContent='+ قۆناغ';
   add.onclick=openEditStages; row.appendChild(add);
 }
+function openEditStages(){
+  renderStFields();
+  om('mo-stages');
+}
+function renderStFields(){
+  document.getElementById('st-fields').innerHTML=stages.map((s,i)=>`
+    <div style="display:flex;gap:7px;margin-bottom:9px;align-items:center">
+      <span style="color:var(--txt2);font-size:12px;min-width:16px">${i+1}</span>
+      <input type="text" value="${s.name}" data-i="${i}" data-f="name" style="flex:2;padding:8px 11px;background:var(--surf2);border:1px solid var(--bdr);border-radius:8px;color:var(--txt);font-family:inherit;font-size:13px;direction:rtl">
+      <input type="text" value="${s.id}"   data-i="${i}" data-f="id"   style="flex:1;padding:8px 11px;background:var(--surf2);border:1px solid var(--bdr);border-radius:8px;color:var(--txt);font-family:inherit;font-size:11px">
+      <button onclick="delSt(${i})" style="padding:7px;border-radius:7px;border:1px solid var(--bdr);background:var(--surf2);color:var(--red);cursor:pointer">🗑️</button>
+    </div>`).join('');
+}
+function addStField(){ stages.push({id:'s'+Date.now(),name:'قۆناغی نوێ'}); renderStFields(); }
+function delSt(i){ if(stages.length<=1){toast('نەتوانیت هەموویان بسڕیتەوە');return;} if(confirm('دڵنیایت؟')){ stages.splice(i,1); renderStFields(); } }
+function saveStages(){
+  document.querySelectorAll('#st-fields input').forEach(inp=>{
+    const i=parseInt(inp.dataset.i),f=inp.dataset.f,v=inp.value.trim();
+    if(stages[i]&&v) stages[i][f]=f==='id'?v.replace(/\s+/g,'-'):v;
+  });
+  save(); cm('mo-stages'); buildStages(); buildQR(); toast('قۆناغەکان پاشەکەوتکران ✓');
+}
 
-// ─── QR GRID ───
-function buildQRGrid(){
+// ════ QR GRID ════
+function buildQR(){
   const BASE=location.href.split('?')[0];
-  const grid=document.getElementById('qr-grid');
-  const title=document.getElementById('qr-sec-title');
+  const grid=document.getElementById('qrgrid');
   grid.innerHTML='';
-
-  const list=activeStage ? courses.filter(c=>c.stage===activeStage) : courses;
-  const sn=activeStage?stageName(activeStage):'هەموو دەرسەکان';
-  title.textContent='📱 '+sn+' ('+list.length+')';
-  document.getElementById('s-total-c').textContent=courses.length;
-
-  if(!list.length){
-    grid.innerHTML=`<div class="no-courses"><div class="ico">📭</div><p>هیچ دەرسێک بۆ ئەم قۆناغە نییە</p></div>`;
-    return;
-  }
-  list.forEach((c,idx)=>{
-    const realIdx=courses.indexOf(c);
-    const stageLbl=stageName(c.stage); const url=`${BASE}?course=${encodeURIComponent(c.id)}&name=${encodeURIComponent(c.name)}&stage=${encodeURIComponent(stageLbl)}`;
-    const card=document.createElement('div'); card.className='qr-card';
+  document.getElementById('s-courses').textContent=courses.length;
+  const list=activeStage?courses.filter(c=>c.stage===activeStage):courses;
+  document.getElementById('qr-title').textContent='📱 '+(activeStage?stName(activeStage):'هەموو دەرسەکان')+' ('+list.length+')';
+  if(!list.length){ grid.innerHTML='<div class="nocourse"><div class="ei">📭</div><p>هیچ دەرسێک نییە</p></div>'; return; }
+  list.forEach(c=>{
+    const idx=courses.indexOf(c);
+    const url=BASE+'?course='+encodeURIComponent(c.id)+'&name='+encodeURIComponent(c.name)+'&stage='+encodeURIComponent(stName(c.stage));
+    const card=document.createElement('div'); card.className='qrcard';
     card.innerHTML=`
-      <div class="qr-top">
-        <div><div class="qr-name">${c.name}</div><div class="qr-stage">${stageName(c.stage)}</div></div>
-        <div class="qr-cnt">👥 <span id="cnt-${c.id}">—</span></div>
+      <div class="qrtop">
+        <div><div class="qrname">${c.name}</div><div class="qrstage">${stName(c.stage)}</div></div>
+        <div class="qrcnt">👥 <span id="cnt-${c.id}">—</span></div>
       </div>
-      <div class="qr-box" id="qr-${c.id}"></div>
-      <div class="qr-acts">
+      <div class="qrbox" id="qr-${c.id}"></div>
+      <div class="qracts">
         <button class="qbtn pri" onclick="copyLink('${url}')">🔗 لینک</button>
         <button class="qbtn" onclick="printQR('${c.id}','${c.name}','${url}')">🖨️</button>
-        <button class="qbtn" onclick="openEdit(${realIdx})">✏️</button>
-        <button class="qbtn del" onclick="confirmDel(${realIdx})">🗑️</button>
+        <button class="qbtn" onclick="openEdit(${idx})">✏️</button>
+        <button class="qbtn del" onclick="confirmDel(${idx})">🗑️</button>
       </div>`;
     grid.appendChild(card);
-    setTimeout(()=>{
-      new QRCode(document.getElementById(`qr-${c.id}`),{text:url,width:144,height:144,colorDark:'#0f1923',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H});
-    },60);
+    setTimeout(()=>{ new QRCode(document.getElementById('qr-'+c.id),{text:url,width:140,height:140,colorDark:'#0f1923',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H}); },60);
   });
 }
-
 function copyLink(url){ navigator.clipboard.writeText(url).then(()=>toast('لینک کۆپیکرا ✓')); }
-
 function printQR(id,name,url){
-  const c=document.getElementById(`qr-${id}`).querySelector('canvas'); if(!c)return;
-  const w=window.open('','','width=420,height=540');
-  w.document.write(`<html><head><title>${name}</title><style>body{font-family:Arial;text-align:center;padding:40px}h2{margin-bottom:16px;font-size:20px}p{color:#555;font-size:13px;margin-top:10px}</style></head><body><h2>${name}</h2><img src="${c.toDataURL()}" width="210" height="210"><p>${url}</p></body></html>`);
+  const c=document.getElementById('qr-'+id).querySelector('canvas'); if(!c)return;
+  const w=window.open('','','width=420,height=520');
+  w.document.write('<html><head><title>'+name+'</title><style>body{font-family:Arial;text-align:center;padding:36px}h2{margin-bottom:14px;font-size:19px}p{color:#555;font-size:12px;margin-top:8px}</style></head><body><h2>'+name+'</h2><img src="'+c.toDataURL()+'" width="200" height="200"><p>'+url+'</p></body></html>');
   w.document.close(); setTimeout(()=>w.print(),300);
 }
-
-// ─── COURSE EDIT / ADD / DELETE ───
 function openEdit(idx){
-  document.getElementById('ms-idx').value=idx;
-  document.getElementById('ms-name').value=courses[idx].name;
-  document.getElementById('ms-id').value=courses[idx].id;
-  const sel=document.getElementById('ms-stage');
-  sel.innerHTML=stages.map(s=>`<option value="${s.id}"${s.id===courses[idx].stage?' selected':''}>${s.name}</option>`).join('');
-  om('mo-single');
+  document.getElementById('me-idx').value=idx;
+  document.getElementById('me-name').value=courses[idx].name;
+  document.getElementById('me-id').value=courses[idx].id;
+  document.getElementById('me-stage').innerHTML=stages.map(s=>`<option value="${s.id}"${s.id===courses[idx].stage?' selected':''}>${s.name}</option>`).join('');
+  om('mo-edit');
 }
-function saveSingle(){
-  const idx=parseInt(document.getElementById('ms-idx').value);
-  const n=document.getElementById('ms-name').value.trim();
-  const id=document.getElementById('ms-id').value.trim().replace(/\s+/g,'-');
-  const st=document.getElementById('ms-stage').value;
-  if(n) courses[idx].name=n; if(id) courses[idx].id=id; if(st) courses[idx].stage=st;
-  save(); cm('mo-single'); buildQRGrid(); toast('پاشەکەوتکرا ✓');
+function saveEdit(){
+  const i=parseInt(document.getElementById('me-idx').value);
+  const n=document.getElementById('me-name').value.trim(), id=document.getElementById('me-id').value.trim().replace(/\s+/g,'-'), st=document.getElementById('me-stage').value;
+  if(n)courses[i].name=n; if(id)courses[i].id=id; if(st)courses[i].stage=st;
+  save(); cm('mo-edit'); buildQR(); toast('پاشەکەوتکرا ✓');
 }
-function confirmDel(idx){ if(confirm(`دەرسی "${courses[idx].name}" بسڕیتەوە؟`)){ courses.splice(idx,1); save(); cm('mo-single'); buildQRGrid(); toast('سڕایەوە'); } }
-function deleteCourse(){ const idx=parseInt(document.getElementById('ms-idx').value); confirmDel(idx); }
-
+function confirmDel(idx){ if(confirm('دەرسی "'+courses[idx].name+'" بسڕیتەوە؟')){ courses.splice(idx,1); save(); cm('mo-edit'); buildQR(); toast('سڕایەوە'); } }
+function delCourse(){ confirmDel(parseInt(document.getElementById('me-idx').value)); }
 function openAddCourse(){
   document.getElementById('ma-name').value=''; document.getElementById('ma-id').value='';
-  const sel=document.getElementById('ma-stage');
-  sel.innerHTML=stages.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
-  if(activeStage) sel.value=activeStage;
+  document.getElementById('ma-stage').innerHTML=stages.map(s=>`<option value="${s.id}"${s.id===activeStage?' selected':''}>${s.name}</option>`).join('');
   om('mo-add');
 }
 function addCourse(){
@@ -493,244 +450,169 @@ function addCourse(){
   const id=document.getElementById('ma-id').value.trim().replace(/\s+/g,'-')||('c'+Date.now());
   const st=document.getElementById('ma-stage').value;
   if(!n){ toast('ناوی دەرس بنووسە'); return; }
-  courses.push({id,name:n,stage:st});
-  save(); cm('mo-add'); buildQRGrid(); toast('دەرسی نوێ زیادکرا ✓');
+  courses.push({id,name:n,stage:st}); save(); cm('mo-add'); buildQR(); toast('دەرسی نوێ زیادکرا ✓');
 }
 
-// ─── STAGE EDIT ───
-function openEditStages(){
-  renderStageFields();
-  om('mo-stages');
-}
-function renderStageFields(){
-  document.getElementById('stages-fields').innerHTML=stages.map((s,i)=>`
-    <div style="display:flex;gap:8px;margin-bottom:10px;align-items:center" id="sf-${i}">
-      <span style="color:var(--text2);font-size:13px;min-width:16px">${i+1}</span>
-      <input type="text" value="${s.name}" data-i="${i}" data-f="name"
-        style="flex:2;padding:9px 11px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;font-size:13px;direction:rtl">
-      <input type="text" value="${s.id}" data-i="${i}" data-f="id"
-        style="flex:1;padding:9px 11px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;font-size:11px">
-      <button onclick="delStage(${i})" style="padding:8px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);color:var(--red);cursor:pointer;font-size:13px">🗑️</button>
-    </div>`).join('');
-}
-function addStageField(){
-  const newId='s'+Date.now();
-  stages.push({id:newId,name:'قۆناغی نوێ'});
-  renderStageFields();
-}
-function delStage(i){
-  if(stages.length<=1){ toast('حەقکەت نییە هەموو قۆناغەکان بسڕیتەوە'); return; }
-  if(confirm(`قۆناغی "${stages[i].name}" بسڕیتەوە؟`)){ stages.splice(i,1); renderStageFields(); }
-}
-function saveStages(){
-  document.querySelectorAll('#stages-fields input').forEach(inp=>{
-    const i=parseInt(inp.dataset.i),f=inp.dataset.f,v=inp.value.trim();
-    if(stages[i] && v) stages[i][f]=f==='id'?v.replace(/\s+/g,'-'):v;
-  });
-  save(); cm('mo-stages'); buildStages(); buildQRGrid(); populateStageFilter(); toast('قۆناغەکان پاشەکەوتکران ✓');
-}
-
-// ═══════════════════════════════════════════════════
-// ATTENDANCE
-// ═══════════════════════════════════════════════════
-// Parse Google Visualization date format: "Date(2026,5,20,12,38,17)" → ISO string
-function parseGVizDate(v){
-  if(!v) return '';
-  if(typeof v === 'string' && v.startsWith('Date(')){
-    const parts = v.replace('Date(','').replace(')','').split(',').map(Number);
-    // months are 0-indexed in this format
-    return new Date(parts[0], parts[1], parts[2], parts[3]||0, parts[4]||0, parts[5]||0).toISOString();
-  }
-  return String(v);
-}
-
+// ════ ATTENDANCE ════
 async function loadAtt(){
-  const btn=document.getElementById('ref-btn');
+  const btn=document.getElementById('refbtn');
   btn.classList.add('spinning');
-  hideBanner();
-  document.getElementById('att-body').innerHTML='<div class="loading"><div class="spin"></div>داتا دێتێت...</div>';
+  document.getElementById('attbody').innerHTML='<div class="loading"><div class="spin"></div>داتا دێتێت...</div>';
   try{
-    // Google Sheets Visualization API — no CORS issues, always works
-    const res  = await fetch(SHEET_CSV);
-    if(!res.ok) throw new Error('HTTP '+res.status);
+    const res  = await fetch(SHEET_URL);
     const text = await res.text();
-    const match = text.match(/setResponse\((\{[\s\S]*\})\)/);
-    if(!match) throw new Error('format error');
-    const gviz = JSON.parse(match[1]);
-    const cols = gviz.table.cols.map(col => col.label);
-    const rows = gviz.table.rows.map(row => {
-      const obj = {};
-      row.c.forEach((cell, i) => { obj[cols[i]] = (cell && cell.v != null) ? cell.v : ''; });
-      return obj;
-    });
-    allRows = rows.map(r=>({
-      name:      r['Name']   || r['name']   || '',
-      course:    r['Course'] || r['course'] || '',
-      stage:     r['stage']  || r['Stage']  || '',
-      timestamp: parseGVizDate(r['Time'] || r['time'] || '')
-    })).filter(r => r.name);
-    console.log('✅ allRows loaded:', allRows.length, allRows[0]);
-    applyF(); updateStats(); populateStageFilter(); populateCourseFilter(); hideBanner();
-  }catch(err){
-    console.error('loadAtt:', err);
-    document.getElementById('att-body').innerHTML='<div class="empty"><div class="ei">⚠️</div><p>داتا نەگەیشت</p><p style="font-size:12px;margin-top:6px;color:var(--text2)">'+err.message+'</p><button onclick="loadAtt()" style="margin-top:12px;padding:8px 18px;background:var(--accent);border:none;border-radius:8px;color:#fff;font-family:inherit;font-size:13px;cursor:pointer">دووبارە هەوڵ بدە</button></div>';
+    // Parse Google Visualization response: /*O_o*/\ngoogle.visualization.Query.setResponse({...});
+    const m = text.match(/setResponse\((\{[\s\S]*\})\)/);
+    if(!m) throw new Error('خوارەوە format error');
+    const gviz = JSON.parse(m[1]);
+    if(gviz.status !== 'ok') throw new Error('Sheet error: '+gviz.status);
+    const cols = gviz.table.cols.map(c=>c.label);
+    allRows = gviz.table.rows.map(row=>{
+      const obj={};
+      row.c.forEach((cell,i)=>{ obj[cols[i]]=(cell&&cell.v!=null)?cell.v:''; });
+      return {
+        name:   obj['Name']  ||obj['name']  ||'',
+        course: obj['Course']||obj['course']||'',
+        stage:  obj['stage'] ||obj['Stage'] ||'',
+        ts:     gvizDate(obj['Time']||obj['time']||'')
+      };
+    }).filter(r=>r.name);
+    applyF(); updateStats(); buildFilters();
+  }catch(e){
+    document.getElementById('attbody').innerHTML='<div class="empty"><div class="ei">⚠️</div><p>'+e.message+'</p><button onclick="loadAtt()" style="margin-top:12px;padding:8px 18px;background:var(--acc);border:none;border-radius:8px;color:#fff;font-family:inherit;font-size:13px;cursor:pointer">دووبارە هەوڵ بدە</button></div>';
+    console.error('loadAtt:', e);
   }
   btn.classList.remove('spinning');
 }
 
-// ─── DATE FILTER ───
-function todayStr(){ return new Date().toISOString().slice(0,10); }
+function gvizDate(v){
+  if(!v) return null;
+  if(typeof v==='string' && v.startsWith('Date(')){
+    const p=v.replace('Date(','').replace(')','').split(',').map(Number);
+    return new Date(p[0],p[1],p[2],p[3]||0,p[4]||0,p[5]||0);
+  }
+  const d=new Date(v); return isNaN(d)?null:d;
+}
+
 function setDate(m){
-  dateMode=m; ['today','week','month','all'].forEach(x=>document.getElementById('dn-'+x).classList.toggle('on',x===m));
-  if(m==='custom'){ customDate=document.getElementById('dn-pick').value; document.getElementById('date-lbl').textContent=customDate; }
-  else{ const L={today:'ئەمڕۆ',week:'ئەم هەفتەیە',month:'ئەم مانگە',all:'هەموو'}; document.getElementById('date-lbl').textContent=L[m]; }
+  dateMode=m;
+  ['all','today','week','month'].forEach(x=>document.getElementById('dn-'+x).classList.toggle('on',x===m));
+  if(m==='custom'){ customDate=document.getElementById('dn-pick').value; document.getElementById('dlbl').textContent=customDate; }
+  else{ document.getElementById('dlbl').textContent={all:'هەموو',today:'ئەمڕۆ',week:'ئەم هەفتەیە',month:'ئەم مانگە'}[m]; }
   applyF();
 }
-function inRange(ts){
+
+function inRange(d){
+  if(!d||!(d instanceof Date)||isNaN(d)) return dateMode==='all';
   if(dateMode==='all') return true;
-  if(!ts) return false;
-  const d = new Date(ts);
-  if(isNaN(d)) return true;
-  const now = new Date();
-  const tod = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const dd  = new Date(d.getFullYear(),  d.getMonth(),   d.getDate());
-  if(dateMode==='today')  return dd.getTime() === tod.getTime();
-  if(dateMode==='week'){  const ws=new Date(tod); ws.setDate(tod.getDate()-tod.getDay()); return d >= ws; }
-  if(dateMode==='month')  return d.getFullYear()===now.getFullYear() && d.getMonth()===now.getMonth();
-  if(dateMode==='custom' && customDate){
-    const cd = new Date(customDate);
-    return dd.getTime() === new Date(cd.getFullYear(),cd.getMonth(),cd.getDate()).getTime();
-  }
+  const now=new Date(), tod=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  const dd=new Date(d.getFullYear(),d.getMonth(),d.getDate());
+  if(dateMode==='today')  return dd.getTime()===tod.getTime();
+  if(dateMode==='week'){  const ws=new Date(tod); ws.setDate(tod.getDate()-tod.getDay()); return d>=ws; }
+  if(dateMode==='month')  return d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth();
+  if(dateMode==='custom'&&customDate){ const cd=new Date(customDate); return dd.getTime()===new Date(cd.getFullYear(),cd.getMonth(),cd.getDate()).getTime(); }
   return true;
 }
 
-// ─── APPLY FILTERS ───
 function applyF(){
   const fs=document.getElementById('f-stage').value;
   const fc=document.getElementById('f-course').value;
   const fn=document.getElementById('f-name').value.toLowerCase();
   filtered=allRows.filter(r=>{
-    const rn=(r.name||'').toLowerCase();
-    const rc=(r.course||'');
-    const rst=(r.stage||'');
-    const rts=(r.timestamp||'');
-    if(fs&&rst!==fs) return false;
-    if(fc&&rc!==fc) return false;
-    if(fn&&!rn.includes(fn)) return false;
-    if(!inRange(rts)) return false;
+    if(fs && r.stage!==fs)   return false;
+    if(fc && r.course!==fc)  return false;
+    if(fn && !r.name.toLowerCase().includes(fn)) return false;
+    if(!inRange(r.ts))       return false;
     return true;
   });
-  console.log('applyF: filtered=', filtered.length, 'dateMode=', dateMode, 'sample ts=', allRows[0]&&allRows[0].timestamp);
   document.getElementById('s-shown').textContent=filtered.length;
-  document.getElementById('rec-inf').innerHTML=`نمایشکراو: <strong>${filtered.length}</strong> / کۆی: <strong>${allRows.length}</strong>`;
-  renderTable(filtered);
+  document.getElementById('recinf').innerHTML='نمایشکراو: <strong>'+filtered.length+'</strong> / کۆی: <strong>'+allRows.length+'</strong>';
+  renderTable();
 }
 
-function renderTable(rows){
-  if(!rows||!rows.length){ document.getElementById('att-body').innerHTML='<div class="empty"><div class="ei">📭</div><p>هیچ تۆمارێک نەدۆزرایەوە</p></div>'; return; }
-  document.getElementById('att-body').innerHTML=`
-    <div class="tbl-wrap"><table>
-      <thead><tr><th>#</th><th>ناوی خوێندکار</th><th>دەرس</th><th>قۆناغ</th><th>بەروار</th><th>کات</th><th>دۆخ</th></tr></thead>
-      <tbody>${rows.map((r,i)=>{
-        const name=r.name||r[0]||'—', course=r.course||r[1]||'—';
-        const stage=r.stage||r[2]||'—';
-        const ts=r.timestamp||r.time||r[3]||r[2]||'—';
-        const d=new Date(ts);
-        const ds=isNaN(d)?ts:d.toLocaleDateString('en-GB',{year:'numeric',month:'short',day:'numeric'});
-        const tm=isNaN(d)?'':d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-        return `<tr>
-          <td style="color:var(--text2);font-size:11px">${i+1}</td>
-          <td style="font-weight:700">${name}</td>
-          <td><span class="badge bb">${course}</span></td>
-          <td><span class="badge bp">${stage}</span></td>
-          <td style="color:var(--text2);font-size:12px">${ds}</td>
-          <td style="color:var(--text2);font-size:12px">${tm}</td>
-          <td><span class="badge bg">✓ ئامادە</span></td>
-        </tr>`;
-      }).join('')}</tbody>
-    </table></div>`;
+function renderTable(){
+  if(!filtered.length){
+    document.getElementById('attbody').innerHTML='<div class="empty"><div class="ei">📭</div><p>هیچ تۆمارێک نەدۆزرایەوە</p></div>';
+    return;
+  }
+  document.getElementById('attbody').innerHTML='<div class="twrap"><table><thead><tr><th>#</th><th>ناوی خوێندکار</th><th>دەرس</th><th>قۆناغ</th><th>Date</th><th>Time</th><th>دۆخ</th></tr></thead><tbody>'+
+    filtered.map((r,i)=>{
+      const ds=r.ts?r.ts.toLocaleDateString('en-GB',{year:'numeric',month:'short',day:'numeric'}):'—';
+      const tm=r.ts?r.ts.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}):'—';
+      return '<tr><td style="color:var(--txt2);font-size:11px">'+(i+1)+'</td><td style="font-weight:700">'+r.name+'</td><td><span class="badge bb">'+r.course+'</span></td><td><span class="badge bp">'+r.stage+'</span></td><td style="color:var(--txt2);font-size:12px">'+ds+'</td><td style="color:var(--txt2);font-size:12px">'+tm+'</td><td><span class="badge bg">✓ ئامادە</span></td></tr>';
+    }).join('')+'</tbody></table></div>';
 }
 
-function populateStageFilter(){
-  const seen=[...new Set(allRows.map(r=>r.stage||r[2]||'').filter(Boolean))];
-  document.getElementById('f-stage').innerHTML='<option value="">— هەموو قۆناغەکان —</option>'+seen.map(s=>`<option value="${s}">${s}</option>`).join('');
-}
-function populateCourseFilter(){
-  const seen=[...new Set(allRows.map(r=>r.course||r[1]||'').filter(Boolean))];
-  document.getElementById('f-course').innerHTML='<option value="">— هەموو دەرسەکان —</option>'+seen.map(c=>`<option value="${c}">${c}</option>`).join('');
-}
 function updateStats(){
-  document.getElementById('s-total').textContent = allRows.length;
-  const tod = new Date(); tod.setHours(0,0,0,0);
-  const tc = allRows.filter(r=>{
-    if(!r.timestamp) return false;
-    const d = new Date(r.timestamp);
-    if(isNaN(d)) return false;
-    const dd = new Date(d.getFullYear(), d.getMonth(), d.getDate());
-    return dd.getTime() === tod.getTime();
-  }).length;
-  document.getElementById('s-today').textContent = tc;
-  document.getElementById('s-shown').textContent = filtered.length || allRows.length;
-  courses.forEach(co=>{ 
-    const el=document.getElementById('cnt-'+co.id); 
-    if(el) el.textContent=allRows.filter(r=>r.course===co.name).length; 
-  });
+  document.getElementById('s-total').textContent=allRows.length;
+  const tod=new Date(); tod.setHours(0,0,0,0);
+  const tc=allRows.filter(r=>{ if(!r.ts||isNaN(r.ts))return false; const d=new Date(r.ts.getFullYear(),r.ts.getMonth(),r.ts.getDate()); return d.getTime()===tod.getTime(); }).length;
+  document.getElementById('s-today').textContent=tc;
+  courses.forEach(c=>{ const el=document.getElementById('cnt-'+c.id); if(el) el.textContent=allRows.filter(r=>r.course===c.name).length; });
 }
 
-function showBanner(m){ console.error('loadAtt error:',m); }
-function hideBanner(){ }
+function buildFilters(){
+  const stages_seen=[...new Set(allRows.map(r=>r.stage).filter(Boolean))];
+  document.getElementById('f-stage').innerHTML='<option value="">— هەموو قۆناغەکان —</option>'+stages_seen.map(s=>'<option value="'+s+'">'+s+'</option>').join('');
+  const courses_seen=[...new Set(allRows.map(r=>r.course).filter(Boolean))];
+  document.getElementById('f-course').innerHTML='<option value="">— هەموو دەرسەکان —</option>'+courses_seen.map(c=>'<option value="'+c+'">'+c+'</option>').join('');
+}
 
-// ═══════════════════════════════════════════════════
-// CHECK-IN
-// ═══════════════════════════════════════════════════
+// ════ EXPORT ════
+function exportExcel(){
+  const rows=filtered.length?filtered:allRows;
+  if(!rows.length){ toast('هیچ داتایەک نییە'); return; }
+  const csv=['\uFEFF#,Name,Course,Stage,Date,Time'];
+  rows.forEach((r,i)=>{
+    const ds=r.ts?r.ts.toLocaleDateString('en-GB'):'';
+    const tm=r.ts?r.ts.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}):'';
+    csv.push((i+1)+',"'+r.name.replace(/"/g,'""')+'","'+r.course.replace(/"/g,'""')+'","'+(r.stage||'').replace(/"/g,'""')+'","'+ds+'","'+tm+'"');
+  });
+  csv.push('','Total,'+rows.length,'Exported,'+new Date().toLocaleString('en-GB'));
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv.join('\n')],{type:'text/csv;charset=utf-8;'}));
+  a.download='Attendance_'+new Date().toLocaleDateString('en-GB').replace(/\//g,'-')+'.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  toast('✓ Excel file downloaded — '+rows.length+' records');
+}
+
+// ════ CHECK-IN ════
 let _cid,_course;
 function initCI(cid){
-  // Load from localStorage if admin has visited this device
-  const stored=localStorage.getItem('att_courses'); if(stored) courses=JSON.parse(stored);
+  const s=localStorage.getItem('att_courses'); if(s) courses=JSON.parse(s);
   const ss=localStorage.getItem('att_stages'); if(ss) stages=JSON.parse(ss);
   _cid=cid;
-  // Get name and stage from URL params (embedded in QR code)
   const params=new URLSearchParams(location.search);
-  const urlName=params.get('name');
-  const urlStage=params.get('stage');
-  // Try to find by id first, fallback to URL params
-  _course=courses.find(c=>c.id===cid);
-  if(!_course && urlName){
-    _course={id:cid, name:decodeURIComponent(urlName), stage:'s1', stageName:urlStage||''};
-  }
+  const urlName=params.get('name'), urlStage=params.get('stage');
+  _course=courses.find(c=>c.id===cid)||(urlName?{id:cid,name:decodeURIComponent(urlName),stage:'s1'}:null);
   if(!_course){ document.getElementById('ci-form').style.display='none'; document.getElementById('ci-nf').style.display='block'; return; }
-  document.getElementById('ci-badge').textContent=_course.name||cid;
-  // Populate stage select — use URL stage or localStorage stages
+  document.getElementById('ci-badge').textContent=_course.name;
   const sel=document.getElementById('ci-stage');
-  const stageLabel=urlStage||(_course.stageName)||'';
-  if(stages && stages.length){
-    sel.innerHTML='<option value="">— قۆناغ هەڵبژێرە —</option>'+stages.map(s=>`<option value="${s.name}"${s.name===stageLabel?' selected':''}>${s.name}</option>`).join('');
-  } else if(stageLabel){
-    sel.innerHTML=`<option value="${stageLabel}" selected>${stageLabel}</option>`;
-  } else {
-    sel.innerHTML='<option value="">— قۆناغ هەڵبژێرە —</option>';
+  const sl=urlStage?decodeURIComponent(urlStage):'';
+  if(stages.length){
+    sel.innerHTML='<option value="">— قۆناغ هەڵبژێرە —</option>'+stages.map(s=>'<option value="'+s.name+'"'+(s.name===sl?' selected':'')+'>'+s.name+'</option>').join('');
+  } else if(sl){
+    sel.innerHTML='<option value="'+sl+'" selected>'+sl+'</option>';
   }
   document.getElementById('ci-name').focus();
-  function cit(){ document.getElementById('ci-clk').textContent=new Date().toLocaleString('en-GB',{weekday:'long',year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'}); }
-  setInterval(cit,1000); cit();
+  function t(){ document.getElementById('ci-clk').textContent=new Date().toLocaleString('en-GB',{weekday:'long',year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'}); }
+  setInterval(t,1000); t();
 }
 async function doCI(){
   const ne=document.getElementById('ci-name'), ee=document.getElementById('ci-err'), btn=document.getElementById('ci-btn');
-  const se=document.getElementById('ci-stage');
-  const name=ne.value.trim(), stageVal=se.value;
-  let ok=true;
-  if(!name){ ee.style.display='block'; ne.classList.add('er'); ne.focus(); ok=false; } else{ ee.style.display='none'; ne.classList.remove('er'); }
-  if(!ok) return;
+  const stEl=document.getElementById('ci-stage');
+  const name=ne.value.trim();
+  if(!name){ ee.style.display='block'; ne.classList.add('er'); ne.focus(); return; }
+  ee.style.display='none'; ne.classList.remove('er');
   btn.disabled=true; btn.innerHTML='<span style="display:inline-block;animation:rot .7s linear infinite">↻</span> دەنێردرێت...';
-  const cName=_course?_course.name:(_cid||'نامەلوم'), now=new Date();
+  const now=new Date(), cName=_course?_course.name:_cid, stVal=stEl.value;
   try{
-    await fetch(API_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({name,course:cName,courseId:_cid,stage:stageVal,timestamp:now.toISOString(),date:now.toLocaleDateString('en-GB'),time:now.toLocaleTimeString('en-GB')})});
+    await fetch(API_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,course:cName,courseId:_cid,stage:stVal,timestamp:now.toISOString()})});
     document.getElementById('ci-form').style.display='none';
     document.getElementById('ci-suc').style.display='flex';
     document.getElementById('suc-name').textContent=name;
     document.getElementById('suc-course').textContent=cName;
-    document.getElementById('suc-stage').textContent=stageVal||'—';
+    document.getElementById('suc-stage').textContent=stVal||'—';
     document.getElementById('suc-time').textContent=now.toLocaleString('en-GB',{weekday:'long',year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'});
   }catch(e){
     btn.disabled=false; btn.innerHTML='<span>✓</span> تۆمارکردن';
@@ -738,62 +620,13 @@ async function doCI(){
   }
 }
 
-// ═══════════════════════════════════════════════════
-// MODAL HELPERS
-// ═══════════════════════════════════════════════════
+// ════ MODAL ════
 function om(id){ document.getElementById(id).classList.add('open'); }
 function cm(id){ document.getElementById(id).classList.remove('open'); }
 
-// ─── TOAST ───
-function toast(m){ const t=document.createElement('div'); t.textContent=m; Object.assign(t.style,{position:'fixed',bottom:'22px',left:'50%',transform:'translateX(-50%)',background:'#10b981',color:'#fff',padding:'10px 20px',borderRadius:'11px',fontFamily:'inherit',fontWeight:'700',zIndex:'999',fontSize:'13px',boxShadow:'0 4px 20px rgba(0,0,0,.4)',pointerEvents:'none'}); document.body.appendChild(t); setTimeout(()=>t.remove(),3000); }
+// ════ TOAST ════
+function toast(m){ const t=document.createElement('div'); t.textContent=m; Object.assign(t.style,{position:'fixed',bottom:'20px',left:'50%',transform:'translateX(-50%)',background:'#10b981',color:'#fff',padding:'10px 20px',borderRadius:'11px',fontFamily:'inherit',fontWeight:'700',zIndex:'999',fontSize:'13px',boxShadow:'0 4px 20px rgba(0,0,0,.4)',pointerEvents:'none'}); document.body.appendChild(t); setTimeout(()=>t.remove(),3000); }
 
-// ─── EXPORT EXCEL ───
-function exportExcel(){
-  if(!allRows || !allRows.length){ toast('هیچ داتایەک نییە بۆ export'); return; }
-
-  // Use filtered rows if filter is active, else all rows
-  const rows = filtered && filtered.length ? filtered : allRows;
-
-  // Build CSV content (Excel opens CSV perfectly)
-  const headers = ['#', 'Name', 'Course', 'Stage', 'Date', 'Time'];
-  const csvRows = [headers.join(',')];
-
-  rows.forEach((r, i) => {
-    const d = new Date(r.timestamp);
-    const dateStr = isNaN(d) ? r.timestamp : d.toLocaleDateString('en-GB', {year:'numeric', month:'short', day:'numeric'});
-    const timeStr = isNaN(d) ? '' : d.toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
-    const row = [
-      i + 1,
-      '"' + (r.name   || '').replace(/"/g, '""') + '"',
-      '"' + (r.course || '').replace(/"/g, '""') + '"',
-      '"' + (r.stage  || '').replace(/"/g, '""') + '"',
-      '"' + dateStr + '"',
-      '"' + timeStr + '"'
-    ];
-    csvRows.push(row.join(','));
-  });
-
-  // Add summary at bottom
-  csvRows.push('');
-  csvRows.push('"Total Records","' + rows.length + '"');
-  csvRows.push('"Exported","' + new Date().toLocaleString('en-GB') + '"');
-
-  const csvContent = '﻿' + csvRows.join('
-'); // BOM for Excel UTF-8
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  const date = new Date().toLocaleDateString('en-GB').replace(/\//g,'-');
-  a.href     = url;
-  a.download = 'Attendance_' + date + '.csv';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  toast('✓ Excel file downloaded — ' + rows.length + ' records');
-}
-
-// ─── START ───
 route();
 </script>
 </body>
