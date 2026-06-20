@@ -262,8 +262,8 @@ tbody tr:hover{background:rgba(59,130,246,.06)}
         <div class="cierr" id="ci-err">⚠️ تکایە ناوت بنووسە</div>
       </div>
       <button class="cisub-btn" id="ci-btn" onclick="doCI()"><span>✓</span> تۆمارکردن</button>
-      <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--bdr);font-size:10px;color:var(--txt2);text-align:center">
-        دروستکراوە لەلایەن <span style="color:var(--acc2)">م. هەواڵ لەتیف فاتح</span> — سەرۆکی بەشی پەرستاری 2026
+      <div style="margin-top:14px;font-size:10px;color:var(--txt2);text-align:center;opacity:.7">
+        م. هەواڵ لەتیف فاتح — سەرۆکی بەشی پەرستاری 2026
       </div>
     </div>
     <div id="ci-suc">
@@ -601,7 +601,7 @@ function initCI(cid){
   const urlName=params.get('name'), urlStage=params.get('stage');
   _course=courses.find(c=>c.id===cid)||(urlName?{id:cid,name:decodeURIComponent(urlName),stage:'s1'}:null);
   if(!_course){ document.getElementById('ci-form').style.display='none'; document.getElementById('ci-nf').style.display='block'; return; }
-  document.getElementById('ci-badge').textContent=_course.name;
+  // course name stored in _course.name
   const sel=document.getElementById('ci-stage');
   const sl=urlStage?decodeURIComponent(urlStage):'';
   if(stages.length){
