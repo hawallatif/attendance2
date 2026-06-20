@@ -359,7 +359,7 @@ tbody tr:hover{background:rgba(59,130,246,.06)}
 
 <script>
 // ═══════════════════════════════════════════════════
-const API_URL = "https://script.google.com/macros/s/AKfycbz_xvRKG0W6vGG_KPGusHYIqVEU94Vo5Eh2BYA5Gx2O7qYKwQxZiYHmOk1rc11yCH0mGQ/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbyaKnFbTJjnTwkXIJ4FWHchrmRpRjHqYdbc6aTGAqIwGjOFbuarZdViqhJA8sSlk3gV/exec";
 
 // ── DEFAULT DATA ──
 let stages = JSON.parse(localStorage.getItem('att_stages') || 'null') || [
@@ -573,31 +573,29 @@ async function loadAtt(){
   btn.classList.remove('spinning');
 }
 
-// Fetch with multiple strategies
 function fetchSheetData(){
-  return new Promise(async (resolve, reject)=>{
-    // Strategy 1: direct fetch (Apps Script with CORS)
-    try{
-      const res = await fetch(API_URL, {redirect:'follow'});
-      const text = await res.text();
-      const t = text.trim();
-      if(t.startsWith('{') || t.startsWith('[')){
-        return resolve(JSON.parse(t));
-      }
-    }catch(e){ console.log('Strategy 1 failed:', e.message); }
-
-    // Strategy 2: JSONP via script tag
+  return new Promise((resolve, reject)=>{
     const cbName = '__gcb_' + Date.now();
-    const script  = document.createElement('script');
-    const timer   = setTimeout(()=>{
-      cleanup();
-      reject(new Error('Timeout'));
+    const timer  = setTimeout(()=>{
+      delete window[cbName];
+      reject(new Error('Timeout — no response from Apps Script'));
     }, 12000);
-    function cleanup(){ try{script.remove();}catch(e){} delete window[cbName]; clearTimeout(timer); }
-    window[cbName] = function(data){ cleanup(); resolve(data); };
-    script.onerror  = function(){ cleanup(); reject(new Error('Script load failed')); };
-    script.src = API_URL + '?callback=' + cbName + '&t=' + Date.now();
-    document.head.appendChild(script);
+
+    window[cbName] = function(data){
+      clearTimeout(timer);
+      delete window[cbName];
+      resolve(data);
+    };
+
+    const s = document.createElement('script');
+    s.src = API_URL + '?callback=' + cbName + '&t=' + Date.now();
+    s.onerror = function(){
+      clearTimeout(timer);
+      delete window[cbName];
+      s.remove();
+      reject(new Error('Script blocked'));
+    };
+    document.head.appendChild(s);
   });
 }
 
