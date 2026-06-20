@@ -548,6 +548,17 @@ function saveStages(){
 // ═══════════════════════════════════════════════════
 // ATTENDANCE
 // ═══════════════════════════════════════════════════
+// Parse Google Visualization date format: "Date(2026,5,20,12,38,17)" → ISO string
+function parseGVizDate(v){
+  if(!v) return '';
+  if(typeof v === 'string' && v.startsWith('Date(')){
+    const parts = v.replace('Date(','').replace(')','').split(',').map(Number);
+    // months are 0-indexed in this format
+    return new Date(parts[0], parts[1], parts[2], parts[3]||0, parts[4]||0, parts[5]||0).toISOString();
+  }
+  return String(v);
+}
+
 async function loadAtt(){
   const btn=document.getElementById('ref-btn');
   btn.classList.add('spinning');
@@ -572,7 +583,7 @@ async function loadAtt(){
       name:      r.Name      || r.name      || '',
       course:    r.Course    || r.course    || '',
       stage:     r.stage     || r.Stage     || '',
-      timestamp: r.Time      || r.time      || r.timestamp || ''
+      timestamp: parseGVizDate(r.Time || r.time || r.timestamp || '')
     }));
     applyF(); updateStats(); populateStageFilter(); populateCourseFilter(); hideBanner();
   }catch(err){
