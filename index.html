@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>سیستەمی ئامادەبوون</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;400;600;700;900&display=swap');
+:root{
+  --bg:#0f1923;--surface:#1a2636;--surface2:#243447;--surface3:#1e3050;
+  --accent:#3b82f6;--accent2:#06b6d4;
+  --green:#10b981;--red:#ef4444;--yellow:#f59e0b;--purple:#8b5cf6;
+  --text:#f0f6ff;--text2:#8ba5c2;--border:#2d4260;
+  --radius:14px;--shadow:0 4px 24px rgba(0,0,0,.45);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Kufi Arabic',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.page{display:none}.page.active{display:block}
+#page-checkin{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+
+/* ── HEADER ── */
+header{background:linear-gradient(135deg,#0d2137,#1a3a5c);border-bottom:1px solid var(--border);padding:16px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.hdr-left{display:flex;align-items:center;gap:12px}
+.hdr-icon{width:44px;height:44px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:20px}
+header h1{font-size:18px;font-weight:700}
+header p{font-size:12px;color:var(--text2);margin-top:2px}
+.online-badge{background:rgba(16,185,129,.15);color:var(--green);border:1px solid rgba(16,185,129,.3);padding:5px 12px;border-radius:18px;font-size:12px;display:flex;align-items:center;gap:5px}
+.pulse{width:7px;height:7px;background:var(--green);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
+
+/* ── CONTAINER ── */
+.wrap{max-width:1440px;margin:0 auto;padding:24px 22px}
+
+/* ── STATS ── */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:24px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;display:flex;align-items:center;gap:12px;transition:all .2s}
+.stat:hover{transform:translateY(-2px);border-color:var(--accent)}
+.stat-ico{font-size:24px}
+.stat-lbl{font-size:11px;color:var(--text2);margin-bottom:2px}
+.stat-val{font-size:24px;font-weight:900;color:var(--accent);line-height:1}
+
+/* ── TABS ── */
+.tabs{display:flex;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:5px;margin-bottom:22px;overflow-x:auto}
+.tab{padding:9px 18px;border-radius:8px;border:none;background:transparent;color:var(--text2);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
+.tab.on{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
+
+/* ── STAGES ── */
+.stages-row{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;align-items:center}
+.stage-btn{padding:9px 20px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text2);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px}
+.stage-btn:hover{border-color:var(--accent);color:var(--accent)}
+.stage-btn.on{background:linear-gradient(135deg,var(--accent),var(--accent2));border-color:transparent;color:#fff}
+.stage-add-btn{margin-right:auto;padding:8px 14px;border-radius:9px;border:1.5px dashed var(--border);background:transparent;color:var(--text2);font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s}
+.stage-add-btn:hover{border-color:var(--green);color:var(--green)}
+
+/* ── QR GRID ── */
+.qr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:24px}
+.qr-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;display:flex;flex-direction:column;align-items:center;gap:12px;transition:all .2s;position:relative;overflow:hidden}
+.qr-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.qr-card:hover{transform:translateY(-3px);border-color:var(--accent);box-shadow:var(--shadow)}
+.qr-top{width:100%;display:flex;justify-content:space-between;align-items:flex-start}
+.qr-name{font-size:14px;font-weight:700}
+.qr-stage{font-size:11px;color:var(--accent2);margin-top:2px}
+.qr-cnt{display:flex;align-items:center;gap:4px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);color:var(--green);padding:4px 9px;border-radius:14px;font-size:12px;font-weight:700}
+.qr-box{background:#fff;padding:9px;border-radius:10px;width:162px;height:162px;display:flex;align-items:center;justify-content:center}
+.qr-box canvas,.qr-box img{width:144px!important;height:144px!important}
+.qr-acts{display:flex;gap:6px;width:100%}
+.qbtn{flex:1;padding:7px 8px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-family:inherit;font-size:11px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:3px}
+.qbtn:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.qbtn.del:hover{background:var(--red);border-color:var(--red)}
+.qbtn.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+.no-courses{text-align:center;padding:50px 20px;color:var(--text2);grid-column:1/-1}
+.no-courses .ico{font-size:42px;margin-bottom:10px}
+
+/* ── SECTION HDR ── */
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.sec-title{font-size:16px;font-weight:700;display:flex;align-items:center;gap:7px}
+
+/* ── DATE NAV ── */
+.date-nav{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.dbn{padding:7px 13px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
+.dbn:hover,.dbn.on{background:var(--accent);border-color:var(--accent);color:#fff}
+input[type=date]{padding:7px 11px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;font-size:12px}
+input[type=date]:focus{outline:none;border-color:var(--accent)}
+.date-lbl{font-size:13px;font-weight:700;color:var(--accent2);margin-right:auto}
+
+/* ── FILTER BAR ── */
+.fbar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
+.fbar select,.fbar input[type=text]{padding:9px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:inherit;font-size:13px;direction:rtl}
+.fbar select:focus,.fbar input:focus{outline:none;border-color:var(--accent)}
+.rec-info{margin-right:auto;color:var(--text2);font-size:12px}
+.rec-info strong{color:var(--text)}
+
+/* ── TABLE ── */
+.tbl-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse}
+thead tr{background:var(--surface2)}
+th{padding:12px 14px;font-size:11px;color:var(--text2);font-weight:700;text-align:right;white-space:nowrap;text-transform:uppercase;letter-spacing:.4px}
+td{padding:11px 14px;font-size:13px;border-top:1px solid var(--border);vertical-align:middle}
+tbody tr:hover{background:rgba(59,130,246,.06)}
+.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:14px;font-size:11px;font-weight:600}
+.bg{background:rgba(16,185,129,.15);color:var(--green);border:1px solid rgba(16,185,129,.2)}
+.bb{background:rgba(59,130,246,.15);color:var(--accent);border:1px solid rgba(59,130,246,.2)}
+.bp{background:rgba(139,92,246,.15);color:var(--purple);border:1px solid rgba(139,92,246,.2)}
+
+/* ── LOADING / EMPTY ── */
+.loading{text-align:center;padding:50px 20px;color:var(--text2)}
+.spin{width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:rot .7s linear infinite;margin:0 auto 12px}
+@keyframes rot{to{transform:rotate(360deg)}}
+.empty{text-align:center;padding:50px 20px;color:var(--text2)}
+.empty .ei{font-size:44px;margin-bottom:10px}
+
+/* ── BUTTONS ── */
+.btn-ref{display:flex;align-items:center;gap:5px;padding:9px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-ref:hover{border-color:var(--accent);color:var(--accent)}
+.btn-ref.spinning svg{animation:rot .7s linear infinite}
+.btn-add{padding:9px 16px;border-radius:9px;border:none;background:linear-gradient(135deg,var(--green),#059669);color:#fff;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .2s;display:flex;align-items:center;gap:5px}
+.btn-add:hover{opacity:.88}
+
+/* ── ERROR BANNER ── */
+.err-banner{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:12px;padding:14px 18px;margin-bottom:14px;display:none;font-size:13px;color:#fca5a5;line-height:1.7}
+.err-banner strong{display:block;margin-bottom:4px;font-size:14px}
+.err-banner code{display:block;margin-top:8px;padding:10px;background:rgba(0,0,0,.35);border-radius:6px;font-size:10px;direction:ltr;text-align:left;word-break:break-all;color:#93c5fd;white-space:pre}
+
+/* ── MODAL ── */
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:200;padding:18px}
+.mo.open{display:flex}
+.mbox{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:28px;width:100%;max-width:540px;max-height:92vh;overflow-y:auto;animation:su .2s ease}
+@keyframes su{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.mtitle{font-size:18px;font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.fg{margin-bottom:13px}
+.fg label{display:block;font-size:11px;color:var(--text2);margin-bottom:4px;font-weight:600}
+.fg input,.fg select{width:100%;padding:10px 13px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:inherit;font-size:13px;direction:rtl;transition:border-color .2s}
+.fg input:focus,.fg select:focus{outline:none;border-color:var(--accent)}
+.macts{display:flex;gap:8px;margin-top:20px}
+.mbtn{flex:1;padding:11px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:9px;color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:opacity .2s}
+.mbtn:hover{opacity:.9}
+.mcancel{padding:11px 18px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;color:var(--text2);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
+.mcancel:hover{border-color:var(--red);color:var(--red)}
+.mdanger{flex:1;padding:11px;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);border-radius:9px;color:var(--red);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s}
+.mdanger:hover{background:var(--red);color:#fff}
+
+/* ── CHECK-IN PAGE ── */
+.cicard{background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:32px 28px;width:100%;max-width:420px;text-align:center;position:relative;overflow:hidden}
+.cicard::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.ci-logo{font-size:48px;margin-bottom:8px}
+.ci-badge{display:inline-block;background:linear-gradient(135deg,rgba(59,130,246,.2),rgba(6,182,212,.2));border:1px solid rgba(59,130,246,.4);color:var(--accent2);padding:5px 16px;border-radius:18px;font-size:13px;font-weight:700;margin-bottom:14px}
+.cicard h1{font-size:22px;font-weight:900;margin-bottom:5px}
+.ci-sub{font-size:13px;color:var(--text2);margin-bottom:24px}
+.ci-g{margin-bottom:16px;text-align:right}
+.ci-g label{display:block;font-size:11px;color:var(--text2);font-weight:600;margin-bottom:5px}
+.ci-g input,.ci-g select{width:100%;padding:13px 15px;background:rgba(255,255,255,.05);border:1.5px solid var(--border);border-radius:11px;color:var(--text);font-family:inherit;font-size:15px;direction:rtl;transition:border-color .2s,box-shadow .2s}
+.ci-g input:focus,.ci-g select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(59,130,246,.15)}
+.ci-g input.er,.ci-g select.er{border-color:var(--red)}
+.ci-err{color:var(--red);font-size:12px;margin-top:4px;display:none}
+.ci-submit{width:100%;padding:14px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:11px;color:#fff;font-family:inherit;font-size:16px;font-weight:700;cursor:pointer;transition:opacity .2s,transform .1s;display:flex;align-items:center;justify-content:center;gap:7px;margin-bottom:12px}
+.ci-submit:hover{opacity:.9}.ci-submit:active{transform:scale(.98)}.ci-submit:disabled{opacity:.5;cursor:not-allowed}
+.ci-clk{color:var(--text2);font-size:11px}
+#ci-suc{display:none;flex-direction:column;align-items:center;gap:12px}
+.sico{width:84px;height:84px;background:rgba(16,185,129,.15);border:2px solid rgba(16,185,129,.4);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:38px;animation:pop .4s cubic-bezier(.175,.885,.32,1.275)}
+@keyframes pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.stitle{font-size:20px;font-weight:900;color:var(--green)}
+.sname{font-size:24px;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sdet{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);border-radius:11px;padding:12px 18px;width:100%}
+.srow{display:flex;justify-content:space-between;align-items:center;padding:4px 0}
+.srow:not(:last-child){border-bottom:1px solid rgba(255,255,255,.06)}
+.sl{color:var(--text2);font-size:11px}.sv{font-weight:700;font-size:12px}
+
+@media(max-width:600px){
+  header{padding:12px 14px}.wrap{padding:12px 10px}
+  .qr-grid{grid-template-columns:1fr}.mbox{padding:18px}
+  .cicard{padding:22px 16px}.stats{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════ PAGE: ADMIN ══════════════════════ -->
+<div id="page-admin" class="page active">
+<header>
+  <div class="hdr-left">
+    <div class="hdr-icon">🎓</div>
+    <div><h1>سیستەمی ئامادەبوون</h1><p>پانێڵی سەرۆکی بەش</p></div>
+  </div>
+  <div class="online-badge"><span class="pulse"></span>ئۆنلاین</div>
+</header>
+
+<div class="wrap">
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat"><div class="stat-ico">📚</div><div><div class="stat-lbl">کۆی دەرسەکان</div><div class="stat-val" id="s-total-c">0</div></div></div>
+    <div class="stat"><div class="stat-ico">👥</div><div><div class="stat-lbl">کۆی ئامادەبوون</div><div class="stat-val" id="s-total">—</div></div></div>
+    <div class="stat"><div class="stat-ico">📅</div><div><div class="stat-lbl">ئەمڕۆ</div><div class="stat-val" id="s-today">—</div></div></div>
+    <div class="stat"><div class="stat-ico">🔍</div><div><div class="stat-lbl">نمایشکراو</div><div class="stat-val" id="s-shown">—</div></div></div>
+    <div class="stat"><div class="stat-ico">⏰</div><div><div class="stat-lbl">ئێستا</div><div class="stat-val" id="s-clk" style="font-size:14px;margin-top:3px">—</div></div></div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab on" id="t-qr"  onclick="showTab('qr')">📱 QR کۆدەکان</button>
+    <button class="tab"    id="t-att" onclick="showTab('att')">📋 ئامادەبوون</button>
+  </div>
+
+  <!-- ─── QR TAB ─── -->
+  <div id="tab-qr">
+    <!-- Stages row -->
+    <div class="stages-row" id="stages-row"></div>
+
+    <div class="sec-hdr">
+      <div class="sec-title" id="qr-sec-title">📱 دەرسەکان</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn-add" onclick="openAddCourse()">+ زیادکردنی دەرس</button>
+        <button class="qbtn" style="width:auto;padding:8px 14px" onclick="openEditStages()">✏️ قۆناغەکان</button>
+      </div>
+    </div>
+    <div class="qr-grid" id="qr-grid"></div>
+  </div>
+
+  <!-- ─── ATTENDANCE TAB ─── -->
+  <div id="tab-att" style="display:none">
+    <div class="err-banner" id="err-b">
+      <strong>⚠️ کێشە لە بارکردنی داتا — Apps Script پێویستە doGet هەبێت</strong>
+      کۆدی خوارەوە بخەرە Google Apps Script و دووبارە Deploy بکە:
+      <code>function doGet(e){
+  var sh=SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Sheet1");
+  var vals=sh.getDataRange().getValues();
+  var hdr=vals[0];
+  var rows=vals.slice(1).map(function(r){var o={};hdr.forEach(function(h,i){o[h]=r[i]});return o});
+  var cb=e.parameter.callback;
+  var json=JSON.stringify({rows:rows});
+  var out=cb
+    ? ContentService.createTextOutput(cb+'('+json+')').setMimeType(ContentService.MimeType.JAVASCRIPT)
+    : ContentService.createTextOutput(json).setMimeType(ContentService.MimeType.JSON);
+  return out;
+}</code>
+    </div>
+
+    <div class="sec-hdr">
+      <div class="sec-title">📋 تۆمارەکانی ئامادەبوون</div>
+      <button class="btn-ref" id="ref-btn" onclick="loadAtt()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        نوێکردنەوە
+      </button>
+    </div>
+
+    <!-- Date nav -->
+    <div class="date-nav">
+      <button class="dbn on" id="dn-today" onclick="setDate('today')">📅 ئەمڕۆ</button>
+      <button class="dbn"    id="dn-week"  onclick="setDate('week')">📆 ئەم هەفتەیە</button>
+      <button class="dbn"    id="dn-month" onclick="setDate('month')">🗓️ ئەم مانگە</button>
+      <button class="dbn"    id="dn-all"   onclick="setDate('all')">📂 هەموو</button>
+      <input  type="date"    id="dn-pick"  onchange="setDate('custom')">
+      <span class="date-lbl" id="date-lbl">ئەمڕۆ</span>
+    </div>
+
+    <!-- Filters -->
+    <div class="fbar">
+      <select id="f-stage"  onchange="applyF()"><option value="">— هەموو قۆناغەکان —</option></select>
+      <select id="f-course" onchange="applyF()"><option value="">— هەموو دەرسەکان —</option></select>
+      <input type="text" id="f-name" placeholder="گەڕان بە ناو..." oninput="applyF()" style="flex:1;min-width:140px">
+      <span class="rec-info" id="rec-inf"></span>
+    </div>
+
+    <div id="att-body"><div class="loading"><div class="spin"></div>چاوەڕوان بە...</div></div>
+  </div>
+
+</div><!-- /wrap -->
+</div><!-- /page-admin -->
+
+<!-- ══════════════════════ PAGE: CHECK-IN ══════════════════════ -->
+<div id="page-checkin" class="page">
+  <div class="cicard">
+    <div id="ci-nf" style="display:none">
+      <div style="font-size:46px;margin-bottom:10px">❌</div>
+      <h2>دەرس نەدۆزرایەوە</h2>
+      <p style="color:var(--text2);margin-top:7px">تکایە QR کۆدی دروست بکات</p>
+    </div>
+    <div id="ci-form">
+      <div class="ci-logo">📚</div>
+      <div class="ci-badge" id="ci-badge">...</div>
+      <h1>تۆمارکردنی ئامادەبوون</h1>
+      <p class="ci-sub">ناوی تەواوت بنووسە</p>
+      <div class="ci-g">
+        <label>قۆناغ</label>
+        <select id="ci-stage"><option value="">— قۆناغ هەڵبژێرە —</option></select>
+      </div>
+      <div class="ci-g">
+        <label>ناوی خوێندکار</label>
+        <input type="text" id="ci-name" placeholder="ناوی تەواو..." autocomplete="name" autocorrect="off" spellcheck="false" onkeydown="if(event.key==='Enter')doCI()">
+        <div class="ci-err" id="ci-err">⚠️ تکایە ناوت بنووسە</div>
+      </div>
+      <button class="ci-submit" id="ci-btn" onclick="doCI()"><span>✓</span> تۆمارکردن</button>
+      <div class="ci-clk">🕐 <span id="ci-clk">—</span></div>
+    </div>
+    <div id="ci-suc">
+      <div class="sico">✓</div>
+      <div class="stitle">ئامادەبوونت تۆمارکرا!</div>
+      <div class="sname" id="suc-name">—</div>
+      <div class="sdet">
+        <div class="srow"><span class="sl">دەرس</span><span class="sv" id="suc-course">—</span></div>
+        <div class="srow"><span class="sl">قۆناغ</span><span class="sv" id="suc-stage">—</span></div>
+        <div class="srow"><span class="sl">کات</span><span class="sv" id="suc-time">—</span></div>
+        <div class="srow"><span class="sl">دۆخ</span><span class="sv" style="color:var(--green)">✓ ئامادە</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODALS ══ -->
+<!-- Edit single course -->
+<div class="mo" id="mo-single">
+  <div class="mbox">
+    <div class="mtitle">✏️ دەستکاری دەرس</div>
+    <input type="hidden" id="ms-idx">
+    <div class="fg"><label>ناوی دەرس</label><input type="text" id="ms-name"></div>
+    <div class="fg"><label>کۆدی دەرس (ID)</label><input type="text" id="ms-id"></div>
+    <div class="fg"><label>قۆناغ</label><select id="ms-stage"></select></div>
+    <div class="macts">
+      <button class="mbtn" onclick="saveSingle()">پاشەکەوت ✓</button>
+      <button class="mdanger" onclick="deleteCourse()">🗑️ سڕینەوە</button>
+      <button class="mcancel" onclick="cm('mo-single')">داخستن</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add course -->
+<div class="mo" id="mo-add">
+  <div class="mbox">
+    <div class="mtitle">➕ زیادکردنی دەرسی نوێ</div>
+    <div class="fg"><label>ناوی دەرس</label><input type="text" id="ma-name" placeholder="ناوی دەرس..."></div>
+    <div class="fg"><label>کۆدی دەرس (ID)</label><input type="text" id="ma-id" placeholder="وەک: math101"></div>
+    <div class="fg"><label>قۆناغ</label><select id="ma-stage"></select></div>
+    <div class="macts">
+      <button class="mbtn" onclick="addCourse()">زیادکردن ✓</button>
+      <button class="mcancel" onclick="cm('mo-add')">داخستن</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit stages -->
+<div class="mo" id="mo-stages">
+  <div class="mbox">
+    <div class="mtitle">🏫 دەستکاری قۆناغەکان</div>
+    <div id="stages-fields"></div>
+    <button class="btn-add" style="margin-bottom:16px" onclick="addStageField()">+ قۆناغی نوێ</button>
+    <div class="macts">
+      <button class="mbtn" onclick="saveStages()">پاشەکەوت ✓</button>
+      <button class="mcancel" onclick="cm('mo-stages')">داخستن</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+const API_URL = "https://script.google.com/macros/s/AKfycbw5S5KEZzFnvmfD7DP2mCNRdUu8mHbpkZzLPBvYbfPD3q-PngtOh2k0c8Emm06rPjh-5w/exec";
+
+// ── DEFAULT DATA ──
+let stages = JSON.parse(localStorage.getItem('att_stages') || 'null') || [
+  {id:'s1', name:'قۆناغی یەکەم'},
+  {id:'s2', name:'قۆناغی دووەم'},
+  {id:'s3', name:'قۆناغی سێیەم'},
+  {id:'s4', name:'قۆناغی چوارەم'}
+];
+let courses = JSON.parse(localStorage.getItem('att_courses') || 'null') || [
+  {id:'c1',name:'بیرکاری',   stage:'s1'},
+  {id:'c2',name:'فیزیا',     stage:'s1'},
+  {id:'c3',name:'کیمیا',     stage:'s2'},
+  {id:'c4',name:'ئینگلیزی',  stage:'s2'},
+  {id:'c5',name:'مێژوو',     stage:'s3'},
+  {id:'c6',name:'کۆمپیوتەر', stage:'s3'}
+];
+
+let allRows=[], filtered=[], dateMode='today', customDate='', activeStage='';
+
+function save(){ localStorage.setItem('att_stages',JSON.stringify(stages)); localStorage.setItem('att_courses',JSON.stringify(courses)); }
+function stageName(id){ const s=stages.find(x=>x.id===id); return s?s.name:id; }
+
+// ═══════════════════════════════════════════════════
+// ROUTER
+// ═══════════════════════════════════════════════════
+function route(){
+  const p=new URLSearchParams(location.search), cid=p.get('course');
+  if(cid){ show('page-checkin'); initCI(cid); }
+  else   { show('page-admin');   initAdmin(); }
+}
+function show(id){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+
+// ═══════════════════════════════════════════════════
+// ADMIN
+// ═══════════════════════════════════════════════════
+function initAdmin(){
+  tick(); setInterval(tick,1000);
+  document.getElementById('dn-pick').value=todayStr();
+  buildStages(); buildQRGrid();
+}
+function tick(){ document.getElementById('s-clk').textContent=new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}); }
+
+function showTab(t){
+  document.getElementById('tab-qr').style.display  = t==='qr'  ? '':'none';
+  document.getElementById('tab-att').style.display = t==='att' ? '':'none';
+  document.getElementById('t-qr').classList.toggle('on',  t==='qr');
+  document.getElementById('t-att').classList.toggle('on', t==='att');
+  if(t==='att') loadAtt();
+}
+
+// ─── STAGES BUTTONS ───
+function buildStages(){
+  const row=document.getElementById('stages-row');
+  row.innerHTML='';
+  stages.forEach(s=>{
+    const b=document.createElement('button');
+    b.className='stage-btn'+(s.id===activeStage?' on':'');
+    b.textContent=s.name;
+    b.onclick=()=>{ activeStage=s.id===activeStage?'':s.id; buildStages(); buildQRGrid(); };
+    row.appendChild(b);
+  });
+  const add=document.createElement('button');
+  add.className='stage-add-btn'; add.textContent='+ قۆناغ';
+  add.onclick=openEditStages; row.appendChild(add);
+}
+
+// ─── QR GRID ───
+function buildQRGrid(){
+  const BASE=location.href.split('?')[0];
+  const grid=document.getElementById('qr-grid');
+  const title=document.getElementById('qr-sec-title');
+  grid.innerHTML='';
+
+  const list=activeStage ? courses.filter(c=>c.stage===activeStage) : courses;
+  const sn=activeStage?stageName(activeStage):'هەموو دەرسەکان';
+  title.textContent='📱 '+sn+' ('+list.length+')';
+  document.getElementById('s-total-c').textContent=courses.length;
+
+  if(!list.length){
+    grid.innerHTML=`<div class="no-courses"><div class="ico">📭</div><p>هیچ دەرسێک بۆ ئەم قۆناغە نییە</p></div>`;
+    return;
+  }
+  list.forEach((c,idx)=>{
+    const realIdx=courses.indexOf(c);
+    const stageLbl=stageName(c.stage); const url=`${BASE}?course=${encodeURIComponent(c.id)}&name=${encodeURIComponent(c.name)}&stage=${encodeURIComponent(stageLbl)}`;
+    const card=document.createElement('div'); card.className='qr-card';
+    card.innerHTML=`
+      <div class="qr-top">
+        <div><div class="qr-name">${c.name}</div><div class="qr-stage">${stageName(c.stage)}</div></div>
+        <div class="qr-cnt">👥 <span id="cnt-${c.id}">—</span></div>
+      </div>
+      <div class="qr-box" id="qr-${c.id}"></div>
+      <div class="qr-acts">
+        <button class="qbtn pri" onclick="copyLink('${url}')">🔗 لینک</button>
+        <button class="qbtn" onclick="printQR('${c.id}','${c.name}','${url}')">🖨️</button>
+        <button class="qbtn" onclick="openEdit(${realIdx})">✏️</button>
+        <button class="qbtn del" onclick="confirmDel(${realIdx})">🗑️</button>
+      </div>`;
+    grid.appendChild(card);
+    setTimeout(()=>{
+      new QRCode(document.getElementById(`qr-${c.id}`),{text:url,width:144,height:144,colorDark:'#0f1923',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H});
+    },60);
+  });
+}
+
+function copyLink(url){ navigator.clipboard.writeText(url).then(()=>toast('لینک کۆپیکرا ✓')); }
+
+function printQR(id,name,url){
+  const c=document.getElementById(`qr-${id}`).querySelector('canvas'); if(!c)return;
+  const w=window.open('','','width=420,height=540');
+  w.document.write(`<html><head><title>${name}</title><style>body{font-family:Arial;text-align:center;padding:40px}h2{margin-bottom:16px;font-size:20px}p{color:#555;font-size:13px;margin-top:10px}</style></head><body><h2>${name}</h2><img src="${c.toDataURL()}" width="210" height="210"><p>${url}</p></body></html>`);
+  w.document.close(); setTimeout(()=>w.print(),300);
+}
+
+// ─── COURSE EDIT / ADD / DELETE ───
+function openEdit(idx){
+  document.getElementById('ms-idx').value=idx;
+  document.getElementById('ms-name').value=courses[idx].name;
+  document.getElementById('ms-id').value=courses[idx].id;
+  const sel=document.getElementById('ms-stage');
+  sel.innerHTML=stages.map(s=>`<option value="${s.id}"${s.id===courses[idx].stage?' selected':''}>${s.name}</option>`).join('');
+  om('mo-single');
+}
+function saveSingle(){
+  const idx=parseInt(document.getElementById('ms-idx').value);
+  const n=document.getElementById('ms-name').value.trim();
+  const id=document.getElementById('ms-id').value.trim().replace(/\s+/g,'-');
+  const st=document.getElementById('ms-stage').value;
+  if(n) courses[idx].name=n; if(id) courses[idx].id=id; if(st) courses[idx].stage=st;
+  save(); cm('mo-single'); buildQRGrid(); toast('پاشەکەوتکرا ✓');
+}
+function confirmDel(idx){ if(confirm(`دەرسی "${courses[idx].name}" بسڕیتەوە؟`)){ courses.splice(idx,1); save(); cm('mo-single'); buildQRGrid(); toast('سڕایەوە'); } }
+function deleteCourse(){ const idx=parseInt(document.getElementById('ms-idx').value); confirmDel(idx); }
+
+function openAddCourse(){
+  document.getElementById('ma-name').value=''; document.getElementById('ma-id').value='';
+  const sel=document.getElementById('ma-stage');
+  sel.innerHTML=stages.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
+  if(activeStage) sel.value=activeStage;
+  om('mo-add');
+}
+function addCourse(){
+  const n=document.getElementById('ma-name').value.trim();
+  const id=document.getElementById('ma-id').value.trim().replace(/\s+/g,'-')||('c'+Date.now());
+  const st=document.getElementById('ma-stage').value;
+  if(!n){ toast('ناوی دەرس بنووسە'); return; }
+  courses.push({id,name:n,stage:st});
+  save(); cm('mo-add'); buildQRGrid(); toast('دەرسی نوێ زیادکرا ✓');
+}
+
+// ─── STAGE EDIT ───
+function openEditStages(){
+  renderStageFields();
+  om('mo-stages');
+}
+function renderStageFields(){
+  document.getElementById('stages-fields').innerHTML=stages.map((s,i)=>`
+    <div style="display:flex;gap:8px;margin-bottom:10px;align-items:center" id="sf-${i}">
+      <span style="color:var(--text2);font-size:13px;min-width:16px">${i+1}</span>
+      <input type="text" value="${s.name}" data-i="${i}" data-f="name"
+        style="flex:2;padding:9px 11px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;font-size:13px;direction:rtl">
+      <input type="text" value="${s.id}" data-i="${i}" data-f="id"
+        style="flex:1;padding:9px 11px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;font-size:11px">
+      <button onclick="delStage(${i})" style="padding:8px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);color:var(--red);cursor:pointer;font-size:13px">🗑️</button>
+    </div>`).join('');
+}
+function addStageField(){
+  const newId='s'+Date.now();
+  stages.push({id:newId,name:'قۆناغی نوێ'});
+  renderStageFields();
+}
+function delStage(i){
+  if(stages.length<=1){ toast('حەقکەت نییە هەموو قۆناغەکان بسڕیتەوە'); return; }
+  if(confirm(`قۆناغی "${stages[i].name}" بسڕیتەوە؟`)){ stages.splice(i,1); renderStageFields(); }
+}
+function saveStages(){
+  document.querySelectorAll('#stages-fields input').forEach(inp=>{
+    const i=parseInt(inp.dataset.i),f=inp.dataset.f,v=inp.value.trim();
+    if(stages[i] && v) stages[i][f]=f==='id'?v.replace(/\s+/g,'-'):v;
+  });
+  save(); cm('mo-stages'); buildStages(); buildQRGrid(); populateStageFilter(); toast('قۆناغەکان پاشەکەوتکران ✓');
+}
+
+// ═══════════════════════════════════════════════════
+// ATTENDANCE
+// ═══════════════════════════════════════════════════
+async function loadAtt(){
+  const btn=document.getElementById('ref-btn');
+  btn.classList.add('spinning');
+  hideBanner();
+  document.getElementById('att-body').innerHTML='<div class="loading"><div class="spin"></div>داتا دێتێت...</div>';
+
+  try{
+    const url=API_URL+'?action=get&t='+Date.now();
+    let data=null;
+    // Try normal fetch first
+    try{
+      const res=await fetch(url,{redirect:'follow'});
+      data=await res.json();
+    }catch{
+      // Fallback: JSONP
+      data=await jsonp(url);
+    }
+    if(!data) throw new Error('داتا نەگەیشت');
+
+    if(Array.isArray(data))            allRows=data;
+    else if(Array.isArray(data.rows))  allRows=data.rows;
+    else if(Array.isArray(data.data))  allRows=data.data;
+    else{ const v=data.values||data.entries||[]; allRows=v.map(r=>Array.isArray(r)?{name:r[0],course:r[1],stage:r[2],timestamp:r[3]}:r); }
+
+    applyF(); updateStats(); populateStageFilter(); populateCourseFilter(); hideBanner();
+  }catch(e){
+    showBanner(e.message);
+    document.getElementById('att-body').innerHTML='<div class="empty"><div class="ei">⚠️</div><p>داتا نەگەیشت — تکایە doGet زیاد بکە</p></div>';
+  }
+  btn.classList.remove('spinning');
+}
+
+function jsonp(url){ return new Promise((res,rej)=>{ const cb='__cb'+Date.now(); const s=document.createElement('script'); const t=setTimeout(()=>{s.remove();delete window[cb];rej(new Error('timeout'))},8000); window[cb]=d=>{s.remove();delete window[cb];clearTimeout(t);res(d)}; s.src=url+'&callback='+cb; s.onerror=()=>{s.remove();rej(new Error('JSONP failed'))}; document.head.appendChild(s); }); }
+
+// ─── DATE FILTER ───
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+function setDate(m){
+  dateMode=m; ['today','week','month','all'].forEach(x=>document.getElementById('dn-'+x).classList.toggle('on',x===m));
+  if(m==='custom'){ customDate=document.getElementById('dn-pick').value; document.getElementById('date-lbl').textContent=customDate; }
+  else{ const L={today:'ئەمڕۆ',week:'ئەم هەفتەیە',month:'ئەم مانگە',all:'هەموو'}; document.getElementById('date-lbl').textContent=L[m]; }
+  applyF();
+}
+function inRange(ts){
+  if(dateMode==='all') return true;
+  if(!ts) return false;
+  let d=new Date(ts);
+  if(isNaN(d)){ const p=String(ts).split(/[\/\-\.T ]/); if(p.length>=3) d=new Date(`${p[2]}-${p[1].padStart(2,'0')}-${p[0].padStart(2,'0')}`); }
+  if(isNaN(d)) return true;
+  const now=new Date(), tod=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  const dd=new Date(d.getFullYear(),d.getMonth(),d.getDate());
+  if(dateMode==='today') return dd.getTime()===tod.getTime();
+  if(dateMode==='week'){ const ws=new Date(tod); ws.setDate(tod.getDate()-tod.getDay()); return d>=ws; }
+  if(dateMode==='month') return d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth();
+  if(dateMode==='custom'&&customDate){ const cd=new Date(customDate); return dd.getTime()===new Date(cd.getFullYear(),cd.getMonth(),cd.getDate()).getTime(); }
+  return true;
+}
+
+// ─── APPLY FILTERS ───
+function applyF(){
+  const fs=document.getElementById('f-stage').value;
+  const fc=document.getElementById('f-course').value;
+  const fn=document.getElementById('f-name').value.toLowerCase();
+  filtered=allRows.filter(r=>{
+    const rn=(r.name||r[0]||'').toLowerCase();
+    const rc=(r.course||r[1]||'');
+    const rst=(r.stage||r[2]||'');
+    const rts=(r.timestamp||r.time||r[3]||r[2]||'');
+    if(fs&&rst!==fs) return false;
+    if(fc&&rc!==fc) return false;
+    if(fn&&!rn.includes(fn)) return false;
+    if(!inRange(rts)) return false;
+    return true;
+  });
+  document.getElementById('s-shown').textContent=filtered.length;
+  document.getElementById('rec-inf').innerHTML=`نمایشکراو: <strong>${filtered.length}</strong> / کۆی: <strong>${allRows.length}</strong>`;
+  renderTable(filtered);
+}
+
+function renderTable(rows){
+  if(!rows||!rows.length){ document.getElementById('att-body').innerHTML='<div class="empty"><div class="ei">📭</div><p>هیچ تۆمارێک نەدۆزرایەوە</p></div>'; return; }
+  document.getElementById('att-body').innerHTML=`
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>#</th><th>ناوی خوێندکار</th><th>دەرس</th><th>قۆناغ</th><th>بەروار</th><th>کات</th><th>دۆخ</th></tr></thead>
+      <tbody>${rows.map((r,i)=>{
+        const name=r.name||r[0]||'—', course=r.course||r[1]||'—';
+        const stage=r.stage||r[2]||'—';
+        const ts=r.timestamp||r.time||r[3]||r[2]||'—';
+        const d=new Date(ts);
+        const ds=isNaN(d)?ts:d.toLocaleDateString('en-GB',{year:'numeric',month:'short',day:'numeric'});
+        const tm=isNaN(d)?'':d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+        return `<tr>
+          <td style="color:var(--text2);font-size:11px">${i+1}</td>
+          <td style="font-weight:700">${name}</td>
+          <td><span class="badge bb">${course}</span></td>
+          <td><span class="badge bp">${stage}</span></td>
+          <td style="color:var(--text2);font-size:12px">${ds}</td>
+          <td style="color:var(--text2);font-size:12px">${tm}</td>
+          <td><span class="badge bg">✓ ئامادە</span></td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table></div>`;
+}
+
+function populateStageFilter(){
+  const seen=[...new Set(allRows.map(r=>r.stage||r[2]||'').filter(Boolean))];
+  document.getElementById('f-stage').innerHTML='<option value="">— هەموو قۆناغەکان —</option>'+seen.map(s=>`<option value="${s}">${s}</option>`).join('');
+}
+function populateCourseFilter(){
+  const seen=[...new Set(allRows.map(r=>r.course||r[1]||'').filter(Boolean))];
+  document.getElementById('f-course').innerHTML='<option value="">— هەموو دەرسەکان —</option>'+seen.map(c=>`<option value="${c}">${c}</option>`).join('');
+}
+function updateStats(){
+  document.getElementById('s-total').textContent=allRows.length;
+  const tod=new Date(); tod.setHours(0,0,0,0);
+  const tc=allRows.filter(r=>{ const d=new Date(r.timestamp||r.time||r[3]||''); if(isNaN(d))return false; const dd=new Date(d.getFullYear(),d.getMonth(),d.getDate()); return dd.getTime()===tod.getTime(); }).length;
+  document.getElementById('s-today').textContent=tc;
+  courses.forEach(c=>{ const el=document.getElementById(`cnt-${c.id}`); if(el) el.textContent=allRows.filter(r=>(r.course||r[1]||'')===c.name).length; });
+}
+
+function showBanner(m){ document.getElementById('err-b').style.display='block'; }
+function hideBanner(){ document.getElementById('err-b').style.display='none'; }
+
+// ═══════════════════════════════════════════════════
+// CHECK-IN
+// ═══════════════════════════════════════════════════
+let _cid,_course;
+function initCI(cid){
+  // Load from localStorage if admin has visited this device
+  const stored=localStorage.getItem('att_courses'); if(stored) courses=JSON.parse(stored);
+  const ss=localStorage.getItem('att_stages'); if(ss) stages=JSON.parse(ss);
+  _cid=cid;
+  // Get name and stage from URL params (embedded in QR code)
+  const params=new URLSearchParams(location.search);
+  const urlName=params.get('name');
+  const urlStage=params.get('stage');
+  // Try to find by id first, fallback to URL params
+  _course=courses.find(c=>c.id===cid);
+  if(!_course && urlName){
+    _course={id:cid, name:decodeURIComponent(urlName), stage:'s1', stageName:urlStage||''};
+  }
+  if(!_course){ document.getElementById('ci-form').style.display='none'; document.getElementById('ci-nf').style.display='block'; return; }
+  document.getElementById('ci-badge').textContent=_course.name||cid;
+  // Populate stage select — use URL stage or localStorage stages
+  const sel=document.getElementById('ci-stage');
+  const stageLabel=urlStage||(_course.stageName)||'';
+  if(stages && stages.length){
+    sel.innerHTML='<option value="">— قۆناغ هەڵبژێرە —</option>'+stages.map(s=>`<option value="${s.name}"${s.name===stageLabel?' selected':''}>${s.name}</option>`).join('');
+  } else if(stageLabel){
+    sel.innerHTML=`<option value="${stageLabel}" selected>${stageLabel}</option>`;
+  } else {
+    sel.innerHTML='<option value="">— قۆناغ هەڵبژێرە —</option>';
+  }
+  document.getElementById('ci-name').focus();
+  function cit(){ document.getElementById('ci-clk').textContent=new Date().toLocaleString('en-GB',{weekday:'long',year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'}); }
+  setInterval(cit,1000); cit();
+}
+async function doCI(){
+  const ne=document.getElementById('ci-name'), ee=document.getElementById('ci-err'), btn=document.getElementById('ci-btn');
+  const se=document.getElementById('ci-stage');
+  const name=ne.value.trim(), stageVal=se.value;
+  let ok=true;
+  if(!name){ ee.style.display='block'; ne.classList.add('er'); ne.focus(); ok=false; } else{ ee.style.display='none'; ne.classList.remove('er'); }
+  if(!ok) return;
+  btn.disabled=true; btn.innerHTML='<span style="display:inline-block;animation:rot .7s linear infinite">↻</span> دەنێردرێت...';
+  const cName=_course?_course.name:(_cid||'نامەلوم'), now=new Date();
+  try{
+    await fetch(API_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({name,course:cName,courseId:_cid,stage:stageVal,timestamp:now.toISOString(),date:now.toLocaleDateString('en-GB'),time:now.toLocaleTimeString('en-GB')})});
+    document.getElementById('ci-form').style.display='none';
+    document.getElementById('ci-suc').style.display='flex';
+    document.getElementById('suc-name').textContent=name;
+    document.getElementById('suc-course').textContent=cName;
+    document.getElementById('suc-stage').textContent=stageVal||'—';
+    document.getElementById('suc-time').textContent=now.toLocaleString('en-GB',{weekday:'long',year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'});
+  }catch(e){
+    btn.disabled=false; btn.innerHTML='<span>✓</span> تۆمارکردن';
+    ee.textContent='⚠️ هەڵەیەک ڕوویدا'; ee.style.display='block';
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// MODAL HELPERS
+// ═══════════════════════════════════════════════════
+function om(id){ document.getElementById(id).classList.add('open'); }
+function cm(id){ document.getElementById(id).classList.remove('open'); }
+
+// ─── TOAST ───
+function toast(m){ const t=document.createElement('div'); t.textContent=m; Object.assign(t.style,{position:'fixed',bottom:'22px',left:'50%',transform:'translateX(-50%)',background:'#10b981',color:'#fff',padding:'10px 20px',borderRadius:'11px',fontFamily:'inherit',fontWeight:'700',zIndex:'999',fontSize:'13px',boxShadow:'0 4px 20px rgba(0,0,0,.4)',pointerEvents:'none'}); document.body.appendChild(t); setTimeout(()=>t.remove(),3000); }
+
+// ─── START ───
+route();
+</script>
+</body>
+</html>
