@@ -359,7 +359,7 @@ tbody tr:hover{background:rgba(59,130,246,.06)}
 
 <script>
 // ═══════════════════════════════════════════════════
-const API_URL = "https://script.google.com/macros/s/AKfycbyaKnFbTJjnTwkXIJ4FWHchrmRpRjHqYdbc6aTGAqIwGjOFbuarZdViqhJA8sSlk3gV/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxvgp5F-TwIzYFlTNbqnoh_c9Tvi9UqWz7-EFhA0r-skz_NNdFxVGsNMWwah1BLr7KMQQ/exec";
 
 // ── DEFAULT DATA ──
 let stages = JSON.parse(localStorage.getItem('att_stages') || 'null') || [
@@ -552,51 +552,28 @@ async function loadAtt(){
   hideBanner();
   document.getElementById('att-body').innerHTML='<div class="loading"><div class="spin"></div>داتا دێتێت...</div>';
   try{
-    const data = await fetchSheetData();
-    if(!data) throw new Error('داتا نەگەیشت');
-    let raw=[];
-    if(Array.isArray(data))            raw=data;
-    else if(Array.isArray(data.rows))  raw=data.rows;
-    else if(Array.isArray(data.data))  raw=data.data;
-    else{ const v=data.values||data.entries||[]; raw=v.map(r=>Array.isArray(r)?{name:r[0],course:r[1],stage:r[2],timestamp:r[3]}:r); }
+    // Apps Script with CORS: fetch directly
+    const res  = await fetch(API_URL, {
+      method: 'GET',
+      mode: 'cors',
+      redirect: 'follow'
+    });
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+
+    let raw = Array.isArray(data) ? data : (data.rows || []);
     allRows = raw.map(r=>({
-      name:      r.name      || r.Name      || r.NAME      || '',
-      course:    r.course    || r.Course    || r.COURSE    || '',
-      stage:     r.stage     || r.Stage     || r.STAGE     || '',
-      timestamp: r.timestamp || r.Timestamp || r.Time      || r.time || r.DATE || ''
+      name:      r.name||r.Name||r.NAME||'',
+      course:    r.course||r.Course||r.COURSE||'',
+      stage:     r.stage||r.Stage||r.STAGE||'',
+      timestamp: r.timestamp||r.Timestamp||r.Time||r.time||''
     }));
     applyF(); updateStats(); populateStageFilter(); populateCourseFilter(); hideBanner();
   }catch(err){
     showBanner(err.message);
-    document.getElementById('att-body').innerHTML='<div class="empty"><div class="ei">⚠️</div><p>داتا نەگەیشت</p><p style="font-size:12px;margin-top:6px">'+err.message+'</p></div>';
+    document.getElementById('att-body').innerHTML='<div class="empty"><div class="ei">⚠️</div><p>داتا نەگەیشت</p><p style="font-size:12px;margin-top:6px;color:var(--text2)">'+err.message+'</p></div>';
   }
   btn.classList.remove('spinning');
-}
-
-function fetchSheetData(){
-  return new Promise((resolve, reject)=>{
-    const cbName = '__gcb_' + Date.now();
-    const timer  = setTimeout(()=>{
-      delete window[cbName];
-      reject(new Error('Timeout — no response from Apps Script'));
-    }, 12000);
-
-    window[cbName] = function(data){
-      clearTimeout(timer);
-      delete window[cbName];
-      resolve(data);
-    };
-
-    const s = document.createElement('script');
-    s.src = API_URL + '?callback=' + cbName + '&t=' + Date.now();
-    s.onerror = function(){
-      clearTimeout(timer);
-      delete window[cbName];
-      s.remove();
-      reject(new Error('Script blocked'));
-    };
-    document.head.appendChild(s);
-  });
 }
 
 // ─── DATE FILTER ───
