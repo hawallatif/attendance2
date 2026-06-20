@@ -237,10 +237,10 @@ tbody tr:hover{background:rgba(59,130,246,.06)}
 
     <!-- Date nav -->
     <div class="date-nav">
-      <button class="dbn on" id="dn-today" onclick="setDate('today')">📅 ئەمڕۆ</button>
+      <button class="dbn"    id="dn-today" onclick="setDate('today')">📅 ئەمڕۆ</button>
       <button class="dbn"    id="dn-week"  onclick="setDate('week')">📆 ئەم هەفتەیە</button>
       <button class="dbn"    id="dn-month" onclick="setDate('month')">🗓️ ئەم مانگە</button>
-      <button class="dbn"    id="dn-all"   onclick="setDate('all')">📂 هەموو</button>
+      <button class="dbn on" id="dn-all"   onclick="setDate('all')">📂 هەموو</button>
       <input  type="date"    id="dn-pick"  onchange="setDate('custom')">
       <span class="date-lbl" id="date-lbl">ئەمڕۆ</span>
     </div>
@@ -364,7 +364,7 @@ let courses = JSON.parse(localStorage.getItem('att_courses') || 'null') || [
   {id:'c6',name:'کۆمپیوتەر', stage:'s3'}
 ];
 
-let allRows=[], filtered=[], dateMode='today', customDate='', activeStage='';
+let allRows=[], filtered=[], dateMode='all', customDate='', activeStage='';
 
 function save(){ localStorage.setItem('att_stages',JSON.stringify(stages)); localStorage.setItem('att_courses',JSON.stringify(courses)); }
 function stageName(id){ const s=stages.find(x=>x.id===id); return s?s.name:id; }
@@ -569,6 +569,7 @@ async function loadAtt(){
       stage:     r['stage']  || r['Stage']  || '',
       timestamp: parseGVizDate(r['Time'] || r['time'] || '')
     })).filter(r => r.name);
+    console.log('✅ allRows loaded:', allRows.length, allRows[0]);
     applyF(); updateStats(); populateStageFilter(); populateCourseFilter(); hideBanner();
   }catch(err){
     console.error('loadAtt:', err);
@@ -619,6 +620,7 @@ function applyF(){
     if(!inRange(rts)) return false;
     return true;
   });
+  console.log('applyF: filtered=', filtered.length, 'dateMode=', dateMode, 'sample ts=', allRows[0]&&allRows[0].timestamp);
   document.getElementById('s-shown').textContent=filtered.length;
   document.getElementById('rec-inf').innerHTML=`نمایشکراو: <strong>${filtered.length}</strong> / کۆی: <strong>${allRows.length}</strong>`;
   renderTable(filtered);
