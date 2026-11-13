@@ -86,7 +86,7 @@ td.n{width:44px;color:var(--mut)}td.nm{font-weight:600}
 'use strict';
 /* ===== ئۆنلاین: ناونیشانی Web App ـی Google Apps Script لێرە دابنێ =====
    ئەگەر بەتاڵ بێت، سیستەمەکە وەک پێشوو بە شێوەی ئۆفلاین (لەسەر ئامێرەکە) کار دەکات. */
-const API_URL='https://script.google.com/macros/s/AKfycbyM6FrVcIeEoj1Lvmn0MuOGvh4XVlI3ZSBYOnjqtLXPT1G2D-Y4q9o0334XIxmdtT17/exec';
+const API_URL='https://script.google.com/macros/s/AKfycbxY1bjYMnIHGx6Bwi-YQtdA7GBKmlOBJhyq43rVZOTd0DJCwlWpC7CzWBIBYwA6Ej-q/exec';
 const ONLINE=/^https?:\/\//.test(API_URL);
 /* ================= SHA-256 (بۆ پاسۆرد) ================= */
 function sha256(ascii){
@@ -841,8 +841,14 @@ async function api(body){
   const ac=typeof AbortController!=='undefined'?new AbortController():null,tm=ac&&setTimeout(()=>ac.abort(),40000);
   try{
     const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body),signal:ac?ac.signal:undefined});
-    return await r.json();
+    const t=await r.text();
+    try{return JSON.parse(t)}catch(e){const er=new Error('BADRESP');er.snip=t.slice(0,80);throw er}
   }finally{if(tm)clearTimeout(tm)}
+}
+function netMsg(e){
+  if(e&&e.message==='BADRESP')return 'سێرڤەر وەڵامێکی هەڵەی دایەوە — لە Apps Script: Deploy ▸ Manage deployments ▸ Who has access دەبێت «Anyone» بێت، و دوای هەر گۆڕانکارییەک وەشانی نوێ (New version) دابنێ';
+  if(e&&e.name==='AbortError')return 'سێرڤەر درەنگ وەڵامی دایەوە — دووبارە هەوڵبدەرەوە';
+  return 'پەیوەندی بە سێرڤەرەوە نەکرا (Failed to fetch) — ئینتەرنێت یان لینکی API_URL بپشکنە';
 }
 function pushSoon(d){if(!ONLINE||!SESSION||SESSION.role==='guest')return;clearTimeout(syncT);syncT=setTimeout(doSync,d||1200)}
 function storeSess(){try{sessionStorage.setItem('nurs_sess',JSON.stringify(SESSION))}catch(e){}}
@@ -880,7 +886,7 @@ async function onlineLogin(f,u,p){
     SESSION={role:res.role,id:res.id,name:res.name,u,ph};storeSess();
     UI.tab=isAdmin()?'home':'attend';UI.att=null;UI.gr=null;
     QUIET=true;save();QUIET=false;setSync('ok');render();
-  }catch(e){toast('پەیوەندی بە سێرڤەرەوە نەکرا. ئینتەرنێتەکەت بپشکنە',true)}
+  }catch(e){toast(netMsg(e),true)}
   finally{if(b.isConnected){b.disabled=false;b.textContent=old}}
 }
 async function onlineLookup(f,code){
